@@ -111,7 +111,7 @@ Out of scope (kept out so Project 2 stays feasible): live-LLM prompt-engineering
 </tbody>
 </table>
 <h3>2.4 Operating environment</h3>
-<p>Single-machine demo; Python + Flask server-rendered UI (Tabler design system, vendored, offline-safe, no build step); SQLite demo database; pytest + GitHub Actions CI. No cloud services required in mock mode.</p>
+<p>Single-machine demo; Python + Flask API + a built React SPA frontend (TypeScript, Vite, shadcn/ui + Tailwind - built at dev time, served statically by Flask, offline-safe at runtime); SQLite demo database; pytest (API/engine) + vitest (frontend) + GitHub Actions CI. No cloud services required in mock mode.</p>
 <h3>2.5 Design and implementation constraints</h3>
 <ul>
 <li><strong>C-1 Read-only execution:</strong> the executor's connection is read-only at the file level and by pragma; writes cannot succeed.</li>
@@ -123,7 +123,7 @@ Out of scope (kept out so Project 2 stays feasible): live-LLM prompt-engineering
   A query that passes the gate but fails at execution returns an error response, is audited with verdict ERROR, and changes nothing (fail closed).</li>
 </ul>
 <h3>2.6 Assumptions and dependencies</h3>
-<p>Two-person group (operator + Arwa) with named lanes; midterm date TBA (requirement document is the by-midterm deliverable, restated by Chen on Sep 3 and Sep 8); demo-scale data volumes; AI-usage policy for deliverables not yet stated on any captured course surface (open item).</p>
+<p>Two-person group (Mahd + Arwa) with named lanes; midterm date TBA (requirement document is the by-midterm deliverable, restated by Chen on Sep 3 and Sep 8); demo-scale data volumes; AI-usage policy for deliverables not yet stated on any captured course surface (open item).</p>
 <h2>3. Specific requirements</h2>
 <h3>3.1 Query flow</h3>
 <ul>
@@ -379,8 +379,8 @@ Out of scope (kept out so Project 2 stays feasible): live-LLM prompt-engineering
 </ul>
 <h2>10. Open items</h2>
 <ol>
-<li>Group review notes: operator-side conversation, folded in as received - not a submission gate.</li>
-<li>AI-usage policy for deliverables: not stated on any captured course surface.</li>
+<li>Group review notes: folded in as received - not a submission gate.</li>
+<li>AI-usage policy for deliverables: no course-stated policy exists; the operator rule applies (AI tools used in development, per course allowances where stated). Settled 09-15 - not a gate.</li>
 <li>Midterm date: not yet posted; pins M2 submission.</li>
 <li>Live-LLM mode: needs the group's API choice (Project 2 opener).</li>
 <li>FR-G10 intent matching: stretch, droppable by recorded decision.</li>

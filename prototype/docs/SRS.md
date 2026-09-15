@@ -53,7 +53,7 @@ Answer plain-English questions against a demo clinic database; show the generate
 | evaluator | run one command that tests the gate against known attacks | safety claims are measured, not asserted | FR-E1..FR-E4 |
 
 ### 2.4 Operating environment
-Single-machine demo; Python + Flask server-rendered UI (Tabler design system, vendored, offline-safe, no build step); SQLite demo database; pytest + GitHub Actions CI. No cloud services required in mock mode.
+Single-machine demo; Python + Flask API + a built React SPA frontend (TypeScript, Vite, shadcn/ui + Tailwind - built at dev time, served statically by Flask, offline-safe at runtime); SQLite demo database; pytest (API/engine) + vitest (frontend) + GitHub Actions CI. No cloud services required in mock mode.
 
 ### 2.5 Design and implementation constraints
 - **C-1 Read-only execution:** the executor's connection is read-only at the file level and by pragma; writes cannot succeed.
@@ -65,7 +65,7 @@ Single-machine demo; Python + Flask server-rendered UI (Tabler design system, ve
   A query that passes the gate but fails at execution returns an error response, is audited with verdict ERROR, and changes nothing (fail closed).
 
 ### 2.6 Assumptions and dependencies
-Two-person group (operator + Arwa) with named lanes; midterm date TBA (requirement document is the by-midterm deliverable, restated by Chen on Sep 3 and Sep 8); demo-scale data volumes; AI-usage policy for deliverables not yet stated on any captured course surface (open item).
+Two-person group (Mahd + Arwa) with named lanes; midterm date TBA (requirement document is the by-midterm deliverable, restated by Chen on Sep 3 and Sep 8); demo-scale data volumes; AI-usage policy for deliverables not yet stated on any captured course surface (open item).
 
 ## 3. Specific requirements
 
@@ -172,8 +172,8 @@ Demo database (protected asset): `patients(id, name, dob, ssn*, diagnosis*)`, `a
 - **AI-era framing** (lecture 1): the gate is the control layer for an AI tool writing SQL against a real schema.
 
 ## 10. Open items
-1. Group review notes: operator-side conversation, folded in as received - not a submission gate.
-2. AI-usage policy for deliverables: not stated on any captured course surface.
+1. Group review notes: folded in as received - not a submission gate.
+2. AI-usage policy for deliverables: no course-stated policy exists; the operator rule applies (AI tools used in development, per course allowances where stated). Settled 09-15 - not a gate.
 3. Midterm date: not yet posted; pins M2 submission.
 4. Live-LLM mode: needs the group's API choice (Project 2 opener).
 5. FR-G10 intent matching: stretch, droppable by recorded decision.
