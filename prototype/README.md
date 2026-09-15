@@ -1,7 +1,7 @@
-# QueryGuard prototype — the working app
+# QueryGuard: the working app
 
-Safety gate for LLM-generated SQL. Requirements: `../srs/SRS.md`. Design: `../TECH_PLAN.md`.
-Decisions: `../DECISIONS.md`. Quality gate for any change: `../QA_CHECKLIST.md`.
+Safety gate for LLM-generated SQL. Requirements: `docs/SRS.docx` (source of truth for what the
+gate must do). Design and decision history live with the team; this README covers the app.
 
 ## Run
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>QueryGuard — requirement document (review copy)</title>
+<title>QueryGuard: requirement document (review copy)</title>
 <style>
   body { margin: 0; background: #121418; color: #f2f0e8;
          font: 16px/1.65 -apple-system, "Segoe UI", Roboto, Ubuntu, sans-serif; }
@@ -33,7 +33,7 @@
 <div class="review"><strong>Review copy for Arwa.</strong> Read top to bottom (about 20 minutes). Mark anything unclear, wrong, or missing: content matters more than wording. Comment in the file, in chat, or bring points to the next call. Nothing is final until the group signs off.</div><div class="note"><strong>How to read this:</strong> Section 2.3.1 is the human summary (who wants what and why). Sections 3 and 6 are the engineering detail: one numbered requirement per safety rule, each mapped to a test. Section 8 holds the measured results.</div>
 <h1>QueryGuard - Software Requirements Specification (v1.1)</h1>
 <p><strong>Status:</strong> v1.1, submission before midterm. Group review notes fold in as they arrive; the submission is not gated on them. Written from the working system and its decision log (<code>DECISIONS.md</code> D-001..D-019); every requirement below is implemented and test-covered unless explicitly marked stretch/open.
-<strong>Structure:</strong> IEEE-830 shaped (the course-confirmed spec form); IEEE-830 was withdrawn and superseded by ISO/IEC/IEEE 29148 — section naming here follows the familiar 830 layout with 29148 terminology.
+<strong>Structure:</strong> IEEE-830 shaped (the course-confirmed spec form); IEEE-830 was withdrawn and superseded by ISO/IEC/IEEE 29148: section naming here follows the familiar 830 layout with 29148 terminology.
 <strong>Revision history:</strong> v0.1 draft 2026-09-10; v1.0 candidate 2026-09-12; v1.1 2026-09-15 - requirement priority ranking (section 3.6) and this history block added per the adopted IEEE 830 / 29148 yardstick (SUBMISSION_CHECKLIST item 5). Review notes fold in as they arrive; the submission is not gated on them.</p>
 <hr />
 <h2>1. Introduction</h2>
@@ -362,7 +362,7 @@ Out of scope (kept out so Project 2 stays feasible): live-LLM prompt-engineering
 <ul>
 <li>verdict matches: <strong>64/64</strong>; benign false-positive rate: <strong>0.0</strong>.</li>
 <li>block-or-mask rate by attack class: direct_dml <strong>100%</strong>, write_bypass <strong>100%</strong>, multi_query <strong>100%</strong>, read_exfiltration <strong>100%</strong>, schema_recon <strong>100%</strong>, semantic_mismatch <strong>100%</strong>.</li>
-<li>exact-verdict match on read_exfiltration: 55.6% — the remainder returned MASK (private columns removed), the designed outcome; the safety-relevant leak rate is 0. Reported separately so the number stays honest (D-008).</li>
+<li>exact-verdict match on read_exfiltration: 55.6%: the remainder returned MASK (private columns removed), the designed outcome; the safety-relevant leak rate is 0. Reported separately so the number stays honest (D-008).</li>
 <li>latency p50/p95: <strong>0.224 / 0.569 ms</strong> (target &lt; 50 ms).</li>
 </ul>
 <h3>8.2 Tests</h3>
@@ -374,7 +374,7 @@ Out of scope (kept out so Project 2 stays feasible): live-LLM prompt-engineering
 <li><strong>User stories</strong> (XP, lecture Sep 3): Section 2.3.1, traced to requirements and tests.</li>
 <li><strong>Test-first / refactoring</strong> (XP, lecture Sep 3): the UNION defect was reproduced as a failing behavior, fixed, and pinned by regression tests; rule interpretations were refactored with the corpus as the safety net.</li>
 <li><strong>Continuous integration</strong> (lecture Sep 3 + slide 7): push-gate workflow fails the build on any test or corpus miss.</li>
-<li><strong>Security practices</strong> (lecture Aug 27): masking vs tokenization, least privilege, read-only enforcement — all demonstrated by the gate.</li>
+<li><strong>Security practices</strong> (lecture Aug 27): masking vs tokenization, least privilege, read-only enforcement: all demonstrated by the gate.</li>
 <li><strong>AI-era framing</strong> (lecture 1): the gate is the control layer for an AI tool writing SQL against a real schema.</li>
 </ul>
 <h2>10. Open items</h2>

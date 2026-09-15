@@ -77,7 +77,7 @@ def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description="branded markdown -> standalone HTML")
     ap.add_argument("src", nargs="?", help="markdown source (default: srs/SRS.md)")
     ap.add_argument("out", nargs="?", help="html output (default: srs/SRS.html)")
-    ap.add_argument("--title", default="QueryGuard — requirement document (review copy)")
+    ap.add_argument("--title", default="QueryGuard: requirement document (review copy)")
     ap.add_argument("--note", default="", help="optional HTML block injected after the first h2")
     ap.add_argument("--banner", default="", help="optional HTML block injected at the top")
     ap.add_argument("--srs", action="store_true", help="SRS mode: review banner + note + mirror into docs/")

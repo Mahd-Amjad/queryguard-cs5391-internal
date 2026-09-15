@@ -1,4 +1,4 @@
-# QueryGuard — project entry point
+# QueryGuard: project entry point
 
 Safety gate for LLM-generated SQL. CS5391 Group Project 1 (M. Mahd Amjad & Arwa Arafeh).
 You ask a question in plain English, an AI drafts the SQL, and a deterministic gate checks
@@ -36,9 +36,9 @@ masked, and every decision is logged.
 
 ## Workspace tooling added (2026-09-12)
 
-- `.meta/scripts/lint_sendable.py` — sendable quality gate (incident-grounded rules, selftest PASS; run on anything before it leaves the workspace).
-- `.meta/scripts/research.py` — codified GitHub/DDGS research patterns.
-- `scripts/md_to_html.py` — branded markdown-to-HTML renderer (SRS mode mirrors into the repo).
+- `.meta/scripts/lint_sendable.py`: sendable quality gate (incident-grounded rules, selftest PASS; run on anything before it leaves the workspace).
+- `.meta/scripts/research.py`: codified GitHub/DDGS research patterns.
+- `scripts/md_to_html.py`: branded markdown-to-HTML renderer (SRS mode mirrors into the repo).
 - Group comms: `group/SRS_REVIEW.html` (Arwa's review copy), `group/MESSAGE_ARWA_RUN_REPO_ANSWER_2026-09-12.txt` (SENT, thumbs-up received).
 
 ## Modules (who owns what)

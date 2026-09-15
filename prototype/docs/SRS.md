@@ -1,7 +1,7 @@
 # QueryGuard - Software Requirements Specification (v1.1)
 
 **Status:** v1.1, submission before midterm. Group review notes fold in as they arrive; the submission is not gated on them. Written from the working system and its decision log (`DECISIONS.md` D-001..D-019); every requirement below is implemented and test-covered unless explicitly marked stretch/open.
-**Structure:** IEEE-830 shaped (the course-confirmed spec form); IEEE-830 was withdrawn and superseded by ISO/IEC/IEEE 29148 — section naming here follows the familiar 830 layout with 29148 terminology.
+**Structure:** IEEE-830 shaped (the course-confirmed spec form); IEEE-830 was withdrawn and superseded by ISO/IEC/IEEE 29148: section naming here follows the familiar 830 layout with 29148 terminology.
 **Revision history:** v0.1 draft 2026-09-10; v1.0 candidate 2026-09-12; v1.1 2026-09-15 - requirement priority ranking (section 3.6) and this history block added per the adopted IEEE 830 / 29148 yardstick (SUBMISSION_CHECKLIST item 5). Review notes fold in as they arrive; the submission is not gated on them.
 
 ---
@@ -157,7 +157,7 @@ Demo database (protected asset): `patients(id, name, dob, ssn*, diagnosis*)`, `a
 ### 8.1 Corpus (64 entries, mock mode)
 - verdict matches: **64/64**; benign false-positive rate: **0.0**.
 - block-or-mask rate by attack class: direct_dml **100%**, write_bypass **100%**, multi_query **100%**, read_exfiltration **100%**, schema_recon **100%**, semantic_mismatch **100%**.
-- exact-verdict match on read_exfiltration: 55.6% — the remainder returned MASK (private columns removed), the designed outcome; the safety-relevant leak rate is 0. Reported separately so the number stays honest (D-008).
+- exact-verdict match on read_exfiltration: 55.6%: the remainder returned MASK (private columns removed), the designed outcome; the safety-relevant leak rate is 0. Reported separately so the number stays honest (D-008).
 - latency p50/p95: **0.224 / 0.569 ms** (target < 50 ms).
 ### 8.2 Tests
 41 passing: per-rule pass+bypass, compound-arm and side-channel regressions, HTTP integration, UI render checks, fail-closed runtime regression (FR-03).
@@ -168,7 +168,7 @@ Demo database (protected asset): `patients(id, name, dob, ssn*, diagnosis*)`, `a
 - **User stories** (XP, lecture Sep 3): Section 2.3.1, traced to requirements and tests.
 - **Test-first / refactoring** (XP, lecture Sep 3): the UNION defect was reproduced as a failing behavior, fixed, and pinned by regression tests; rule interpretations were refactored with the corpus as the safety net.
 - **Continuous integration** (lecture Sep 3 + slide 7): push-gate workflow fails the build on any test or corpus miss.
-- **Security practices** (lecture Aug 27): masking vs tokenization, least privilege, read-only enforcement — all demonstrated by the gate.
+- **Security practices** (lecture Aug 27): masking vs tokenization, least privilege, read-only enforcement: all demonstrated by the gate.
 - **AI-era framing** (lecture 1): the gate is the control layer for an AI tool writing SQL against a real schema.
 
 ## 10. Open items
