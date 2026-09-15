@@ -47,7 +47,34 @@ converge_shared() {
     else
       echo "WHITELIST-MISS: $entry" >&2
     fi
-  done < "$PROJECT/submission/SHARED_WHITELIST.txt"
+  done <<'WL'
+README.md
+qg.sh
+requirements.txt
+queryguard/
+tests/
+data/
+scripts/
+presentation/
+.github/workflows/
+docs/SRS.md
+docs/SRS.html
+docs/SRS.docx
+docs/story.md
+web/src/
+web/public/
+web/index.html
+web/package.json
+web/pnpm-lock.yaml
+web/vite.config.ts
+web/tsconfig.json
+web/tsconfig.app.json
+web/tsconfig.node.json
+web/eslint.config.js
+web/components.json
+web/.env.example
+web/.gitignore
+WL
   git -C "$STAGE_SHARED" add -A
 }
 
