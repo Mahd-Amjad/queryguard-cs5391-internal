@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROPOSAL_DECK.pptx</title>
+<script type="importmap">{"imports":{"three":"https://d.officecli.ai/assets/three-0.170.0/build/three.module.js","three/addons/":"https://d.officecli.ai/assets/three-0.170.0/examples/jsm/"}}</script>
+<style>
+:root{--slide-design-w:960pt;--slide-design-h:540pt;--slide-aspect:1.7778;}
+/* OfficeCli HTML Preview Stylesheet */
+/* Dynamic variables --slide-design-w, --slide-design-h, --slide-aspect are set inline */
+
+:root {
+    --sidebar-w: 180px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    background: #1a1a2e;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: #12122a;
+    border-right: 1px solid #2a2a4a;
+    overflow-y: auto;
+    padding: 12px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.sidebar-title {
+    color: #888;
+    font-size: 11px;
+    text-align: center;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.thumb {
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 3px;
+    padding: 2px;
+    transition: border-color 0.15s;
+    position: relative;
+}
+.thumb:hover { border-color: #555; }
+.thumb.active { border-color: #5b9bd5; }
+.thumb-inner {
+    width: 100%;
+    aspect-ratio: var(--slide-aspect);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+    pointer-events: none;
+}
+.thumb-slide {
+    width: var(--slide-design-w);
+    height: var(--slide-design-h);
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: 0 0;
+    background: white;
+}
+.thumb-num {
+    position: absolute;
+    bottom: 2px;
+    right: 4px;
+    color: #888;
+    font-size: 10px;
+}
+
+/* ===== Main area ===== */
+.main {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    gap: 24px;
+    scroll-behavior: smooth;
+}
+.file-title {
+    display: none;
+}
+.slide-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+.slide-label {
+    display: none;
+}
+.slide-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.slide {
+    width: var(--slide-design-w);
+    height: var(--slide-design-h);
+    position: relative;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    border-radius: 2px;
+    transform-origin: center top;
+    flex-shrink: 0;
+}
+
+/* ===== Speaker notes (R8-bt-3) ===== */
+.slide-notes {
+    width: var(--slide-design-w);
+    margin-top: 8px;
+    padding: 10px 14px;
+    background: #1f1f1f;
+    color: #ddd;
+    border-left: 3px solid #888;
+    border-radius: 2px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 12pt;
+    line-height: 1.4;
+    box-sizing: border-box;
+}
+.slide-notes[dir="rtl"] {
+    border-left: none;
+    border-right: 3px solid #888;
+    text-align: right;
+}
+.slide-notes-label {
+    font-size: 10pt;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #888;
+    margin-bottom: 4px;
+}
+.slide-notes-body div { margin: 2px 0; }
+
+/* ===== Page counter ===== */
+.page-counter {
+    position: fixed;
+    bottom: 16px;
+    right: 24px;
+    background: rgba(0,0,0,0.6);
+    color: #ccc;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    z-index: 100;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+/* ===== Fullscreen ===== */
+body.fullscreen .sidebar { display: none; }
+body.fullscreen .main {
+    padding: 0;
+    gap: 0;
+    overflow: hidden;
+    scroll-behavior: auto;
+}
+body.fullscreen .file-title { display: none; }
+body.fullscreen .slide-container {
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    display: none;
+    gap: 0;
+}
+body.fullscreen .slide-container.fs-active { display: flex; }
+body.fullscreen .slide-label { color: #444; font-size: 11px; }
+body.fullscreen .slide {
+    box-shadow: none;
+    border-radius: 0;
+}
+
+/* ===== Sidebar toggle button ===== */
+.sidebar-toggle {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    z-index: 200;
+    background: rgba(30,30,60,0.85);
+    color: #aaa;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 14px;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.25s;
+}
+.sidebar-toggle:hover { color: #fff; border-color: #888; }
+/* Hover zone: top-left 60x60px area reveals the button */
+.toggle-zone {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 60px;
+    z-index: 199;
+    display: none;
+}
+.toggle-zone:hover + .sidebar-toggle,
+.sidebar-toggle:hover {
+    opacity: 1;
+}
+body.sidebar-hidden .sidebar { display: none; }
+body.sidebar-hidden .sidebar-toggle { left: 8px; }
+/* Headless / automated browser — hide sidebar, toggle, and page counter */
+html.headless .sidebar,
+html.headless .sidebar-toggle,
+html.headless .toggle-zone,
+html.headless .page-counter { display: none !important; }
+
+/* ===== Narrow viewport: auto-hide sidebar ===== */
+@media (max-width: 900px) {
+    .sidebar { display: none; }
+    .sidebar-toggle { display: block; }
+    .toggle-zone { display: block; }
+    body.sidebar-visible .sidebar { display: flex; position: fixed; top: 0; left: 0; bottom: 0; z-index: 150; }
+    body.sidebar-visible .sidebar-toggle { left: calc(var(--sidebar-w) + 8px); opacity: 1; }
+    body.sidebar-visible .toggle-zone { display: none; }
+}
+
+/* ===== Elements ===== */
+.shape {
+    position: absolute;
+    overflow: visible;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+.shape.has-fill {
+    overflow: hidden;
+}
+.shape-text {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.shape-text.valign-top { justify-content: flex-start; }
+.shape-text.valign-center { justify-content: center; }
+.shape-text.valign-bottom { justify-content: flex-end; }
+/* anchorCtr="1": shrink-wrap paragraphs so align-items:center can center the
+   text block horizontally (a width:100% .para would otherwise fill the frame). */
+.shape-text.anchor-ctr .para { width: auto; max-width: 100%; }
+/* Vertical text (writing-mode): the flex main axis is horizontal, so valign-*
+   (justify-content) anchors the text column horizontally — matching PowerPoint's
+   anchor="ctr". A width:100% .para would fill that axis and defeat the centering,
+   so shrink-wrap the paragraphs like anchor-ctr does. */
+.shape-text.has-vert-text .para { width: auto; max-width: 100%; }
+.para { width: 100%; line-height: 1; }
+.picture { position: absolute; overflow: hidden; }
+.picture img { width: 100%; height: 100%; object-fit: fill; }
+/* overflow:visible (not hidden) — with border-collapse:collapse the
+   rightmost/bottommost cell's outer 1pt border sits exactly on the
+   container edge; overflow:hidden would clip its outer half. Cell
+   content overflow is already handled by .slide-table td below. */
+.table-container { position: absolute; overflow: visible; }
+.slide-table { width: 100%; height: 100%; border-collapse: collapse; table-layout: fixed; }
+.slide-table td { padding: 4px 6px; vertical-align: top; overflow: hidden; font-size: 10pt; color: inherit; }
+.connector { position: absolute; pointer-events: none; }
+/* The connector's bounding box is a large rectangle for any diagonal/bent line,
+   so the box stays click-through (pointer-events:none above) — otherwise it would
+   swallow clicks meant for shapes beneath it. But pointer-events is inherited in
+   SVG, so leave the drawn stroke itself hittable: an interactive host (the editor)
+   can then select the connector by clicking the visible line, while the empty box
+   area still passes through. fill="none" means only the stroke receives events. */
+.connector svg line, .connector svg polyline, .connector svg path { pointer-events: stroke; }
+.group { position: absolute; }
+
+</style>
+<script>if(location.hash.indexOf('screenshot')>=0||navigator.webdriver||/HeadlessChrome/.test(navigator.userAgent))document.documentElement.classList.add('headless')</script>
+</head>
+<body>
+<div class="toggle-zone"></div><button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+<div class="sidebar">
+  <div class="sidebar-title">PROPOSAL_DECK.pptx</div>
+  <div class="thumb" data-slide="1">
+    <div class="thumb-inner"></div>
+    <span class="thumb-num">1</span>
+  </div>
+  <div class="thumb" data-slide="2">
+    <div class="thumb-inner"></div>
+    <span class="thumb-num">2</span>
+  </div>
+  <div class="thumb" data-slide="3">
+    <div class="thumb-inner"></div>
+    <span class="thumb-num">3</span>
+  </div>
+  <div class="thumb" data-slide="4">
+    <div class="thumb-inner"></div>
+    <span class="thumb-num">4</span>
+  </div>
+  <div class="thumb" data-slide="5">
+    <div class="thumb-inner"></div>
+    <span class="thumb-num">5</span>
+  </div>
+  <div class="thumb" data-slide="6">
+    <div class="thumb-inner"></div>
+    <span class="thumb-num">6</span>
+  </div>
+  <div class="thumb" data-slide="7">
+    <div class="thumb-inner"></div>
+    <span class="thumb-num">7</span>
+  </div>
+  <div class="thumb" data-slide="8">
+    <div class="thumb-inner"></div>
+    <span class="thumb-num">8</span>
+  </div>
+</div>
+<div class="main">
+<h1 class="file-title">PROPOSAL_DECK.pptx</h1>
+<div class="slide-container" data-slide="1">
+  <div class="slide-label">Slide 1</div>
+  <div class="slide-wrapper">
+    <div class="slide" style="background:#080A0E;font-family:'Calibri','PingFang SC', 'Hiragino Sans', 'Yu Gothic', 'Apple SD Gothic Neo', 'Microsoft YaHei', 'Noto Sans CJK SC',sans-serif;color:#000000;">
+    <div class="shape has-fill" data-path="/slide[1]/shape[@id=2]" style="left:595.28pt;top:0pt;width:566.93pt;height:566.93pt;background:rgba(201,168,76,0.12);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[1]/shape[@id=3]" style="left:737.01pt;top:283.46pt;width:340.16pt;height:340.16pt;background:rgba(90,158,72,0.15);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[1]/shape[@id=4]" style="left:0pt;top:0pt;width:170.08pt;height:170.08pt;background:rgba(201,168,76,0.07)"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[1]/shape[@id=5]" style="left:28.35pt;top:368.5pt;width:113.39pt;height:113.39pt"><div style="position:absolute;inset:0;clip-path:polygon(54.35% 8.7%,100% 54.35%,54.35% 100%,8.7% 54.35%);background:rgba(139,201,74,0.18)"></div><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[1]/shape[@id=6]" style="left:487.56pt;top:158.74pt;width:28.35pt;height:28.35pt;background:rgba(201,168,76,0.6);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[1]/shape[@id=7]" style="left:0pt;top:0pt;width:960pt;height:8.5pt;background:#C9A84C"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[1]/shape[@id=8]" style="left:34.02pt;top:62.36pt;width:198.43pt;height:8.5pt;background:#C9A84C"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[1]/shape[@id=9]" style="left:34.02pt;top:62.36pt;width:198.43pt;height:34.02pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:11pt;line-height:1.2"><span style="font-family:'Calibri','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:11pt;font-weight:bold;color:#080A0E">CS 5391 · GROUP PROJECT PROPOSAL</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[1]/shape[@id=10]" style="left:34.02pt;top:93.54pt;width:425.2pt;height:170.08pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:68pt;line-height:1.2"><span style="font-family:'Aptos Display','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:68pt;color:#C9A84C">QueryGuard</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[1]/shape[@id=11]" style="left:34.02pt;top:274.96pt;width:425.2pt;height:60.94pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:22pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:22pt;color:#A8A090">A safety gate for LLM-generated SQL</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[1]/shape[@id=12]" style="left:34.02pt;top:340.16pt;width:141.73pt;height:5.67pt;background:#C9A84C"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[1]/shape[@id=13]" style="left:34.02pt;top:354.33pt;width:283.46pt;height:43.94pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:16pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:16pt;color:#6A6458">Muhammad Mahd Amjad · Arwa Arafeh</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[1]/shape[@id=14]" style="left:510.24pt;top:28.35pt;width:434.65pt;height:481.89pt;background:#141A20;border:0.5pt solid #252820;border-radius:72.44pt"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[1]/shape[@id=100000]" style="left:64.8pt;top:400pt;width:150pt;height:40pt;background:#111C28;border-radius:6.67pt;padding:3.6pt 10.5pt 3.6pt 10.5pt"><div class="shape-text valign-center"><div class="para" style="text-align:center;font-size:13pt;line-height:1.2"><span style="font-family:'Calibri','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:13pt;font-weight:bold;color:#FFFFFF">QUESTION</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[1]/shape[@id=100001]" style="left:216.8pt;top:414pt;width:24pt;height:12pt;background:#38BDF8"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[1]/shape[@id=100002]" style="left:240.8pt;top:400pt;width:150pt;height:40pt;background:#111C28;border-radius:6.67pt;padding:3.6pt 10.5pt 3.6pt 10.5pt"><div class="shape-text valign-center"><div class="para" style="text-align:center;font-size:13pt;line-height:1.2"><span style="font-family:'Calibri','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:13pt;font-weight:bold;color:#FFFFFF">LLM DRAFTS SQL</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[1]/shape[@id=100003]" style="left:392.8pt;top:414pt;width:24pt;height:12pt;background:#38BDF8"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[1]/shape[@id=100004]" style="left:416.8pt;top:400pt;width:150pt;height:40pt;background:#38BDF8;border-radius:6.67pt;padding:3.6pt 10.5pt 3.6pt 10.5pt"><div class="shape-text valign-center"><div class="para" style="text-align:center;font-size:13pt;line-height:1.2"><span style="font-family:'Calibri','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:13pt;font-weight:bold;color:#FFFFFF">GATE: 10 RULES</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[1]/shape[@id=100005]" style="left:568.8pt;top:414pt;width:24pt;height:12pt;background:#38BDF8"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[1]/shape[@id=100006]" style="left:592.8pt;top:400pt;width:150pt;height:40pt;background:#111C28;border-radius:6.67pt;padding:3.6pt 10.5pt 3.6pt 10.5pt"><div class="shape-text valign-center"><div class="para" style="text-align:center;font-size:13pt;line-height:1.2"><span style="font-family:'Calibri','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:13pt;font-weight:bold;color:#FFFFFF">DATABASE</span></div>
+</div></div>
+    </div>
+  </div>
+</div>
+<div class="slide-container" data-slide="2">
+  <div class="slide-label">Slide 2</div>
+  <div class="slide-wrapper">
+    <div class="slide" style="background:#080A0E;font-family:'Calibri','PingFang SC', 'Hiragino Sans', 'Yu Gothic', 'Apple SD Gothic Neo', 'Microsoft YaHei', 'Noto Sans CJK SC',sans-serif;color:#000000;">
+    <div class="shape has-fill" data-path="/slide[2]/shape[@id=2]" style="left:0pt;top:0pt;width:425.2pt;height:425.2pt;background:rgba(90,158,72,0.1);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[2]/shape[@id=3]" style="left:765.35pt;top:311.81pt;width:340.16pt;height:340.16pt;background:rgba(201,168,76,0.1);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[2]/shape[@id=4]" style="left:0pt;top:0pt;width:960pt;height:540pt;background:rgba(139,201,74,0.05)"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[2]/shape[@id=5]" style="left:708.66pt;top:113.39pt;width:141.73pt;height:141.73pt"><div style="position:absolute;inset:0;clip-path:polygon(54.35% 8.7%,100% 54.35%,54.35% 100%,8.7% 54.35%);background:rgba(201,168,76,0.2)"></div><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[2]/shape[@id=6]" style="left:85.04pt;top:425.2pt;width:39.69pt;height:39.69pt;background:rgba(139,201,74,0.5);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[2]/shape[@id=7]" style="left:0pt;top:0pt;width:960pt;height:8.5pt;background:#5A9E48"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[2]/shape[@id=8]" style="left:34.02pt;top:158.74pt;width:113.39pt;height:11.34pt;background:#C9A84C"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[2]/shape[@id=9]" style="left:34.02pt;top:178.58pt;width:737.01pt;height:198.43pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:40pt;line-height:1.2"><span style="font-family:'Aptos Display','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:40pt;color:#F2F0E8">Every generated query should be checked before it touches the database.</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[2]/shape[@id=10]" style="left:34.02pt;top:385.51pt;width:708.66pt;height:56.69pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:20pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:20pt;font-style:italic;color:#A8A090">Three CVEs since 2024 show what happens when they are not. We make the check visible and measured.</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[2]/shape[@id=100007]" style="left:64.8pt;top:512pt;width:300pt;height:19.84pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-top"><div class="para" style="text-align:left;font-size:10pt;line-height:1.2"><span style="font-family:'Calibri','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:10pt;color:#8899BB">QueryGuard · CS 5391 Group Project Proposal</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[2]/shape[@id=100014]" style="left:54pt;top:60pt;width:60pt;height:94.96pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-top"><div class="para" style="text-align:left;font-size:72pt;line-height:1.2"><span style="font-family:'Georgia','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:72pt;font-weight:bold;color:#38BDF8">“</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[2]/shape[@id=100015]" style="left:0pt;top:0pt;width:9.92pt;height:540pt;background:#38BDF8"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    </div>
+  </div>
+</div>
+<div class="slide-container" data-slide="3">
+  <div class="slide-label">Slide 3</div>
+  <div class="slide-wrapper">
+    <div class="slide" style="background:#080A0E;font-family:'Calibri','PingFang SC', 'Hiragino Sans', 'Yu Gothic', 'Apple SD Gothic Neo', 'Microsoft YaHei', 'Noto Sans CJK SC',sans-serif;color:#000000;">
+    <div class="shape has-fill" data-path="/slide[3]/shape[@id=2]" style="left:0pt;top:141.73pt;width:960pt;height:425.2pt;background:rgba(201,168,76,0.05)"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[3]/shape[@id=3]" style="left:708.66pt;top:283.46pt;width:425.2pt;height:425.2pt;background:rgba(90,158,72,0.08);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[3]/shape[@id=4]" style="left:0pt;top:0pt;width:368.5pt;height:127.56pt;background:rgba(201,168,76,0.05)"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[3]/shape[@id=5]" style="left:28.35pt;top:453.54pt;width:85.04pt;height:85.04pt"><div style="position:absolute;inset:0;clip-path:polygon(54.35% 8.7%,100% 54.35%,54.35% 100%,8.7% 54.35%);background:rgba(139,201,74,0.12)"></div><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[3]/shape[@id=6]" style="left:907.09pt;top:56.69pt;width:28.35pt;height:28.35pt;background:rgba(201,168,76,0.4);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[3]/shape[@id=7]" style="left:0pt;top:0pt;width:960pt;height:8.5pt;background:#C9A84C"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[3]/shape[@id=8]" style="left:34.02pt;top:28.35pt;width:141.73pt;height:8.5pt;background:#C9A84C"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[3]/shape[@id=9]" style="left:34.02pt;top:28.35pt;width:141.73pt;height:19.84pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:10pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:10pt;font-weight:bold;color:#080A0E">PROBLEM</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[3]/shape[@id=10]" style="left:34.02pt;top:42.52pt;width:891.97pt;height:85.04pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:36pt;line-height:1.2"><span style="font-family:'Aptos Display','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:36pt;color:#F2F0E8">LLM-to-database is unsafe by default</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[3]/shape[@id=11]" style="left:34.02pt;top:133.23pt;width:891.97pt;height:51.02pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:18pt;color:#A8A090">Frameworks pass LLM-generated SQL straight to the database. Three CVEs since 2024 show the result.</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[3]/shape[@id=12]" style="left:34.02pt;top:181.42pt;width:215.43pt;height:240.94pt;background:#141A20;border:0.5pt solid #252820;border-radius:35.91pt"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[3]/shape[@id=13]" style="left:34.02pt;top:181.42pt;width:215.43pt;height:8.5pt;background:#C9A84C"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[3]/shape[@id=14]" style="left:45.35pt;top:198.43pt;width:56.69pt;height:56.69pt;background:rgba(201,168,76,0.15);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[3]/shape[@id=15]" style="left:45.35pt;top:198.43pt;width:56.69pt;height:56.69pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:20pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:20pt;font-weight:bold;color:#C9A84C">1</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[3]/shape[@id=16]" style="left:45.35pt;top:263.62pt;width:192.76pt;height:42.52pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:19pt;line-height:1.2"><span style="font-family:'Aptos Display','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:19pt;color:#F2F0E8">3 CVEs</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[3]/shape[@id=17]" style="left:45.35pt;top:316.06pt;width:42.52pt;height:42.52pt"><div style="position:absolute;inset:0;clip-path:polygon(18.29% 69.44%,46.34% 100%,100% 30.56%);background:transparent"></div><svg style="position:absolute;inset:0;width:100%;height:100%;overflow:visible" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="18.29 69.44,46.34 100,100 30.56" fill="none" stroke="#5A9E48" stroke-width="0.5pt" vector-effect="non-scaling-stroke" stroke-linecap="butt" stroke-linejoin="round"/></svg><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[3]/shape[@id=18]" style="left:102.05pt;top:311.81pt;width:136.06pt;height:55.28pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:13pt;line-height:1.2"><span style="font-family:'Calibri','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:13pt;color:#A8A090">Disclosed 2024-2026 in LLM-DB frameworks</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[3]/shape[@id=19]" style="left:257.95pt;top:181.42pt;width:215.43pt;height:240.94pt;background:#141A20;border:0.5pt solid #252820;border-radius:35.91pt"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[3]/shape[@id=20]" style="left:257.95pt;top:181.42pt;width:215.43pt;height:8.5pt;background:#C9A84C"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[3]/shape[@id=21]" style="left:269.29pt;top:198.43pt;width:56.69pt;height:56.69pt;background:rgba(201,168,76,0.15);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[3]/shape[@id=22]" style="left:269.29pt;top:198.43pt;width:56.69pt;height:56.69pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:20pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:20pt;font-weight:bold;color:#C9A84C">2</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[3]/shape[@id=23]" style="left:269.29pt;top:263.62pt;width:192.76pt;height:42.52pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:19pt;line-height:1.2"><span style="font-family:'Aptos Display','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:19pt;color:#F2F0E8">CVSS 9.8</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[3]/shape[@id=24]" style="left:269.29pt;top:316.06pt;width:42.52pt;height:42.52pt"><div style="position:absolute;inset:0;clip-path:polygon(18.29% 69.44%,46.34% 100%,100% 30.56%);background:transparent"></div><svg style="position:absolute;inset:0;width:100%;height:100%;overflow:visible" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="18.29 69.44,46.34 100,100 30.56" fill="none" stroke="#5A9E48" stroke-width="0.5pt" vector-effect="non-scaling-stroke" stroke-linecap="butt" stroke-linejoin="round"/></svg><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[3]/shape[@id=25]" style="left:325.98pt;top:311.81pt;width:136.06pt;height:42.52pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:13pt;line-height:1.2"><span style="font-family:'Calibri','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:13pt;color:#A8A090">PII extraction via AnythingLLM</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[3]/shape[@id=26]" style="left:481.89pt;top:181.42pt;width:215.43pt;height:240.94pt;background:#141A20;border:0.5pt solid #252820;border-radius:35.91pt"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[3]/shape[@id=27]" style="left:481.89pt;top:181.42pt;width:215.43pt;height:8.5pt;background:#C9A84C"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[3]/shape[@id=28]" style="left:493.23pt;top:198.43pt;width:56.69pt;height:56.69pt;background:rgba(201,168,76,0.15);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[3]/shape[@id=29]" style="left:493.23pt;top:198.43pt;width:56.69pt;height:56.69pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:20pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:20pt;font-weight:bold;color:#C9A84C">3</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[3]/shape[@id=30]" style="left:493.23pt;top:263.62pt;width:192.76pt;height:42.52pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:19pt;line-height:1.2"><span style="font-family:'Aptos Display','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:19pt;color:#F2F0E8">50% ASR</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[3]/shape[@id=31]" style="left:493.23pt;top:316.06pt;width:42.52pt;height:42.52pt"><div style="position:absolute;inset:0;clip-path:polygon(18.29% 69.44%,46.34% 100%,100% 30.56%);background:transparent"></div><svg style="position:absolute;inset:0;width:100%;height:100%;overflow:visible" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="18.29 69.44,46.34 100,100 30.56" fill="none" stroke="#5A9E48" stroke-width="0.5pt" vector-effect="non-scaling-stroke" stroke-linecap="butt" stroke-linejoin="round"/></svg><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[3]/shape[@id=32]" style="left:549.92pt;top:311.81pt;width:136.06pt;height:55.28pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:13pt;line-height:1.2"><span style="font-family:'Calibri','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:13pt;color:#A8A090">Attack success rate without defenses</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[3]/shape[@id=33]" style="left:705.83pt;top:181.42pt;width:215.43pt;height:240.94pt;background:#141A20;border:0.5pt solid #252820;border-radius:35.91pt"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[3]/shape[@id=34]" style="left:705.83pt;top:181.42pt;width:215.43pt;height:8.5pt;background:#C9A84C"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[3]/shape[@id=35]" style="left:717.17pt;top:198.43pt;width:56.69pt;height:56.69pt;background:rgba(201,168,76,0.15);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[3]/shape[@id=36]" style="left:717.17pt;top:198.43pt;width:56.69pt;height:56.69pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:20pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:20pt;font-weight:bold;color:#C9A84C">4</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[3]/shape[@id=37]" style="left:717.17pt;top:263.62pt;width:192.76pt;height:42.52pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:19pt;line-height:1.2"><span style="font-family:'Aptos Display','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:19pt;color:#F2F0E8">0 explanations</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[3]/shape[@id=38]" style="left:717.17pt;top:316.06pt;width:42.52pt;height:42.52pt"><div style="position:absolute;inset:0;clip-path:polygon(18.29% 69.44%,46.34% 100%,100% 30.56%);background:transparent"></div><svg style="position:absolute;inset:0;width:100%;height:100%;overflow:visible" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="18.29 69.44,46.34 100,100 30.56" fill="none" stroke="#5A9E48" stroke-width="0.5pt" vector-effect="non-scaling-stroke" stroke-linecap="butt" stroke-linejoin="round"/></svg><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[3]/shape[@id=39]" style="left:773.86pt;top:311.81pt;width:136.06pt;height:42.52pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:13pt;line-height:1.2"><span style="font-family:'Calibri','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:13pt;color:#A8A090">Tools never explain a block</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[3]/shape[@id=40]" style="left:34.02pt;top:442.2pt;width:891.97pt;height:56.69pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:12pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:12pt;color:#6A6458">The problem is documented in public CVEs and academic studies; the project builds the missing layer between LLM and database.</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[3]/shape[@id=100008]" style="left:64.8pt;top:512pt;width:300pt;height:19.84pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-top"><div class="para" style="text-align:left;font-size:10pt;line-height:1.2"><span style="font-family:'Calibri','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:10pt;color:#8899BB">QueryGuard · CS 5391 Group Project Proposal</span></div>
+</div></div>
+    </div>
+  </div>
+</div>
+<div class="slide-container" data-slide="4">
+  <div class="slide-label">Slide 4</div>
+  <div class="slide-wrapper">
+    <div class="slide" style="background:#080A0E;font-family:'Calibri','PingFang SC', 'Hiragino Sans', 'Yu Gothic', 'Apple SD Gothic Neo', 'Microsoft YaHei', 'Noto Sans CJK SC',sans-serif;color:#000000;">
+    <div class="shape has-fill" data-path="/slide[4]/shape[@id=2]" style="left:28.35pt;top:70.87pt;width:453.54pt;height:453.54pt;background:rgba(201,168,76,0.3);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[4]/shape[@id=3]" style="left:425.2pt;top:170.08pt;width:311.81pt;height:311.81pt;background:rgba(90,158,72,0.2);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[4]/shape[@id=4]" style="left:0pt;top:0pt;width:960pt;height:141.73pt;background:rgba(201,168,76,0.04)"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[4]/shape[@id=5]" style="left:878.74pt;top:425.2pt;width:113.39pt;height:113.39pt"><div style="position:absolute;inset:0;clip-path:polygon(54.35% 8.7%,100% 54.35%,54.35% 100%,8.7% 54.35%);background:rgba(139,201,74,0.12)"></div><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[4]/shape[@id=6]" style="left:28.35pt;top:481.89pt;width:39.69pt;height:39.69pt;background:rgba(201,168,76,0.5);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[4]/shape[@id=7]" style="left:0pt;top:0pt;width:960pt;height:8.5pt;background:#5A9E48"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[4]/shape[@id=8]" style="left:34.02pt;top:28.35pt;width:226.77pt;height:8.5pt;background:#5A9E48"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[4]/shape[@id=9]" style="left:34.02pt;top:28.35pt;width:226.77pt;height:19.84pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:10pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:10pt;font-weight:bold;color:#080A0E">EXISTING DEFENSES</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[4]/shape[@id=10]" style="left:34.02pt;top:42.52pt;width:891.97pt;height:85.04pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:36pt;line-height:1.2"><span style="font-family:'Aptos Display','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:36pt;color:#F2F0E8">What exists today</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[4]/shape[@id=11]" style="left:34.02pt;top:155.91pt;width:283.46pt;height:180pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:72pt;line-height:1.2"><span style="font-family:'Aptos Display','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:72pt;color:#F2F0E8">Retrain</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[4]/shape[@id=12]" style="left:34.02pt;top:300.47pt;width:283.46pt;height:39.69pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:17pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:17pt;color:#A8A090">StruQ, SecAlign: model-side</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[4]/shape[@id=13]" style="left:34.02pt;top:350.08pt;width:42.52pt;height:42.52pt"><div style="position:absolute;inset:0;clip-path:polygon(11.36% 100%,11.36% 62.5%,31.82% 62.5%,31.82% 100%,45.45% 100%,45.45% 31.25%,65.91% 31.25%,65.91% 100%,79.55% 100%,79.55% 68.75%,100% 68.75%,100% 100%);background:transparent"></div><svg style="position:absolute;inset:0;width:100%;height:100%;overflow:visible" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="11.36 100,11.36 62.5,31.82 62.5,31.82 100,45.45 100,45.45 31.25,65.91 31.25,65.91 100,79.55 100,79.55 68.75,100 68.75,100 100" fill="none" stroke="#C9A84C" stroke-width="0.5pt" vector-effect="non-scaling-stroke" stroke-linecap="butt" stroke-linejoin="round"/></svg><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[4]/shape[@id=14]" style="left:90.71pt;top:345.83pt;width:226.77pt;height:42.52pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:15pt;line-height:1.2"><span style="font-family:'Calibri','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:15pt;color:#6A6458">Requires swapping or tuning the model</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[4]/shape[@id=15]" style="left:340.16pt;top:184.25pt;width:255.12pt;height:113.39pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:54pt;line-height:1.2"><span style="font-family:'Aptos Display','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:54pt;color:#8BC94A">Generic</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[4]/shape[@id=16]" style="left:340.16pt;top:300.47pt;width:255.12pt;height:39.69pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:17pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:17pt;color:#A8A090">NeMo, Guardrails AI</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[4]/shape[@id=17]" style="left:340.16pt;top:350.08pt;width:42.52pt;height:42.52pt"><div style="position:absolute;inset:0;clip-path:polygon(26.67% 71.43%,93.33% 71.43%,69.33% 42.86%,100% 71.43%,69.33% 100%);background:transparent"></div><svg style="position:absolute;inset:0;width:100%;height:100%;overflow:visible" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="26.67 71.43,93.33 71.43,69.33 42.86,100 71.43,69.33 100" fill="none" stroke="#8BC94A" stroke-width="0.5pt" vector-effect="non-scaling-stroke" stroke-linecap="butt" stroke-linejoin="round"/></svg><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[4]/shape[@id=18]" style="left:396.85pt;top:345.83pt;width:198.43pt;height:42.52pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:15pt;line-height:1.2"><span style="font-family:'Calibri','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:15pt;color:#6A6458">Opaque, not SQL-aware</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[4]/shape[@id=19]" style="left:623.62pt;top:212.6pt;width:226.77pt;height:85.04pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:44pt;line-height:1.2"><span style="font-family:'Aptos Display','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:44pt;color:#6A6458">Tools</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[4]/shape[@id=20]" style="left:623.62pt;top:300.47pt;width:226.77pt;height:48.19pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:17pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:17pt;color:#6A6458">HeimdaLLM, sql-data-guard</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[4]/shape[@id=21]" style="left:623.62pt;top:350.08pt;width:42.52pt;height:42.52pt"><div style="position:absolute;inset:0;clip-path:polygon(56.82% 14.63%,100% 100%,13.64% 100%,56.82% 51.22%,56.82% 75.61%,56.82% 85.37%,56.82% 90.24%);background:transparent"></div><svg style="position:absolute;inset:0;width:100%;height:100%;overflow:visible" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="56.82 14.63,100 100,13.64 100,56.82 51.22,56.82 75.61,56.82 85.37,56.82 90.24" fill="none" stroke="#6A6458" stroke-width="0.5pt" vector-effect="non-scaling-stroke" stroke-linecap="butt" stroke-linejoin="round"/></svg><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[4]/shape[@id=22]" style="left:680.31pt;top:345.83pt;width:170.08pt;height:42.52pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:15pt;line-height:1.2"><span style="font-family:'Calibri','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:15pt;color:#6A6458">Gates exist, numbers don&#39;t</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[4]/shape[@id=23]" style="left:34.02pt;top:439.37pt;width:891.97pt;height:5.67pt;background:#C9A84C"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[4]/shape[@id=24]" style="left:34.02pt;top:450.71pt;width:891.97pt;height:51.02pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:18pt;color:#6A6458">Key insight: a transparent, SQL-specific gate at the app layer with measured false positives is the missing piece.</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[4]/shape[@id=100009]" style="left:64.8pt;top:512pt;width:300pt;height:19.84pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-top"><div class="para" style="text-align:left;font-size:10pt;line-height:1.2"><span style="font-family:'Calibri','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:10pt;color:#8899BB">QueryGuard · CS 5391 Group Project Proposal</span></div>
+</div></div>
+    </div>
+  </div>
+</div>
+<div class="slide-container" data-slide="5">
+  <div class="slide-label">Slide 5</div>
+  <div class="slide-wrapper">
+    <div class="slide" style="background:#080A0E;font-family:'Calibri','PingFang SC', 'Hiragino Sans', 'Yu Gothic', 'Apple SD Gothic Neo', 'Microsoft YaHei', 'Noto Sans CJK SC',sans-serif;color:#000000;">
+    <div class="shape has-fill" data-path="/slide[5]/shape[@id=2]" style="left:0pt;top:0pt;width:487.56pt;height:540pt;background:rgba(201,168,76,0.05)"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[5]/shape[@id=3]" style="left:498.9pt;top:0pt;width:461.1pt;height:540pt;background:rgba(90,158,72,0.05)"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[5]/shape[@id=4]" style="left:487.56pt;top:56.69pt;width:11.34pt;height:426.61pt;background:#C9A84C"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[5]/shape[@id=5]" style="left:0pt;top:0pt;width:283.46pt;height:283.46pt;background:rgba(201,168,76,0.08);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[5]/shape[@id=6]" style="left:668.98pt;top:425.2pt;width:85.04pt;height:85.04pt"><div style="position:absolute;inset:0;clip-path:polygon(54.35% 8.7%,100% 54.35%,54.35% 100%,8.7% 54.35%);background:rgba(139,201,74,0.12)"></div><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[5]/shape[@id=7]" style="left:0pt;top:0pt;width:487.56pt;height:8.5pt;background:#C9A84C"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[5]/shape[@id=8]" style="left:34.02pt;top:28.35pt;width:255.12pt;height:8.5pt;background:#C9A84C"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[5]/shape[@id=9]" style="left:34.02pt;top:28.35pt;width:255.12pt;height:19.84pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:10pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:10pt;font-weight:bold;color:#080A0E">OUR SOLUTION</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[5]/shape[@id=10]" style="left:34.02pt;top:42.52pt;width:425.2pt;height:85.04pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:36pt;line-height:1.2"><span style="font-family:'Aptos Display','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:36pt;color:#F2F0E8">QueryGuard</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[5]/shape[@id=11]" style="left:34.02pt;top:133.23pt;width:425.2pt;height:51.02pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:18pt;color:#A8A090">Four components; each becomes a numbered SRS requirement and a team lane.</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[5]/shape[@id=12]" style="left:34.02pt;top:181.42pt;width:11.34pt;height:65.2pt;background:#C9A84C"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[5]/shape[@id=13]" style="left:56.69pt;top:195.59pt;width:402.52pt;height:34.02pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:16pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:16pt;color:#A8A090">Validation gate - AST rule engine (40%)</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[5]/shape[@id=14]" style="left:34.02pt;top:263.62pt;width:11.34pt;height:65.2pt;background:#8BC94A"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[5]/shape[@id=15]" style="left:56.69pt;top:277.8pt;width:402.52pt;height:34.02pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:16pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:16pt;color:#A8A090">Evaluation harness - corpus + CI (20%)</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[5]/shape[@id=16]" style="left:34.02pt;top:345.83pt;width:11.34pt;height:65.2pt;background:#5A9E48"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[5]/shape[@id=17]" style="left:56.69pt;top:360pt;width:402.52pt;height:34.02pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:16pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:16pt;color:#A8A090">Web application - UI and API (20%)</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[5]/shape[@id=18]" style="left:34.02pt;top:428.03pt;width:11.34pt;height:65.2pt;background:#6A6458"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[5]/shape[@id=19]" style="left:56.69pt;top:442.2pt;width:402.52pt;height:34.02pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:16pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:16pt;color:#A8A090">Docs, decisions and presentation (20%)</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[5]/chart[@id=22]" style="left:527.24pt;top:42.52pt;width:404.41pt;height:453.54pt;background:transparent;display:flex;flex-direction:column;overflow:hidden">
+      <svg viewBox="0 0 513 576" style="width:100%;flex:1;min-height:0" preserveAspectRatio="xMidYMin meet">
+        <path d="M 256.5,288 L 256.5,72.5 A 215.5,215.5 0 0,1 383.1,462.3 Z" fill="#4472C4" opacity="1" stroke="#FFFFFF" stroke-width="2"/>
+        <path d="M 256.5,288 L 383.1,462.3 A 215.5,215.5 0 0,1 129.9,462.3 Z" fill="#ED7D31" opacity="1" stroke="#FFFFFF" stroke-width="2"/>
+        <path d="M 256.5,288 L 129.9,462.3 A 215.5,215.5 0 0,1 51.6,221.4 Z" fill="#A5A5A5" opacity="1" stroke="#FFFFFF" stroke-width="2"/>
+        <path d="M 256.5,288 L 51.6,221.4 A 215.5,215.5 0 0,1 256.5,72.5 Z" fill="#FFC000" opacity="1" stroke="#FFFFFF" stroke-width="2"/>
+        <text class="chart-data-label" x="389.7" y="244.7" fill="#fff" font-size="8" font-weight="bold" text-anchor="middle" dominant-baseline="central">40</text>
+        <text class="chart-data-label" x="256.5" y="428" fill="#fff" font-size="8" font-weight="bold" text-anchor="middle" dominant-baseline="central">20</text>
+        <text class="chart-data-label" x="123.3" y="331.3" fill="#fff" font-size="8" font-weight="bold" text-anchor="middle" dominant-baseline="central">20</text>
+        <text class="chart-data-label" x="174.2" y="174.7" fill="#fff" font-size="8" font-weight="bold" text-anchor="middle" dominant-baseline="central">20</text>
+      </svg>
+<div class="chart-legend" data-legend-pos="b" style="display:flex;flex-wrap:wrap;justify-content:center;gap:16px;padding:4px 0;font-size:8pt;color:#000000"><span style="display:inline-flex;align-items:center;gap:4px"><span style="display:inline-block;width:12px;height:12px;background:#4472C4;border-radius:1px"></span>Gate engine</span><span style="display:inline-flex;align-items:center;gap:4px"><span style="display:inline-block;width:12px;height:12px;background:#ED7D31;border-radius:1px"></span>Evaluation</span><span style="display:inline-flex;align-items:center;gap:4px"><span style="display:inline-block;width:12px;height:12px;background:#A5A5A5;border-radius:1px"></span>App</span><span style="display:inline-flex;align-items:center;gap:4px"><span style="display:inline-block;width:12px;height:12px;background:#FFC000;border-radius:1px"></span>Docs</span></div>
+    </div>
+    <div class="shape" data-path="/slide[5]/shape[@id=100010]" style="left:64.8pt;top:512pt;width:300pt;height:19.84pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-top"><div class="para" style="text-align:left;font-size:10pt;line-height:1.2"><span style="font-family:'Calibri','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:10pt;color:#8899BB">QueryGuard · CS 5391 Group Project Proposal</span></div>
+</div></div>
+    </div>
+  </div>
+</div>
+<div class="slide-container" data-slide="6">
+  <div class="slide-label">Slide 6</div>
+  <div class="slide-wrapper">
+    <div class="slide" style="background:#080A0E;font-family:'Calibri','PingFang SC', 'Hiragino Sans', 'Yu Gothic', 'Apple SD Gothic Neo', 'Microsoft YaHei', 'Noto Sans CJK SC',sans-serif;color:#000000;">
+    <div class="shape has-fill" data-path="/slide[6]/shape[@id=2]" style="left:680.31pt;top:255.12pt;width:425.2pt;height:425.2pt;background:rgba(90,158,72,0.08);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[6]/shape[@id=3]" style="left:0pt;top:0pt;width:170.08pt;height:170.08pt;background:rgba(201,168,76,0.08);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[6]/shape[@id=4]" style="left:0pt;top:0pt;width:960pt;height:85.04pt;background:rgba(139,201,74,0.04)"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[6]/shape[@id=5]" style="left:0pt;top:0pt;width:8.5pt;height:540pt;background:#C9A84C"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[6]/shape[@id=6]" style="left:113.39pt;top:425.2pt;width:113.39pt;height:113.39pt"><div style="position:absolute;inset:0;clip-path:polygon(54.35% 8.7%,100% 54.35%,54.35% 100%,8.7% 54.35%);background:rgba(201,168,76,0.15)"></div><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[6]/shape[@id=7]" style="left:0pt;top:0pt;width:960pt;height:8.5pt;background:#5A9E48"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[6]/shape[@id=8]" style="left:34.02pt;top:28.35pt;width:255.12pt;height:8.5pt;background:#5A9E48"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[6]/shape[@id=9]" style="left:34.02pt;top:28.35pt;width:255.12pt;height:19.84pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:10pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:10pt;font-weight:bold;color:#080A0E">EVALUATION</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[6]/shape[@id=10]" style="left:34.02pt;top:42.52pt;width:891.97pt;height:85.04pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:36pt;line-height:1.2"><span style="font-family:'Aptos Display','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:36pt;color:#F2F0E8">Corpus: current vs target</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[6]/shape[@id=11]" style="left:34.02pt;top:133.23pt;width:891.97pt;height:51.02pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:18pt;color:#A8A090">Six attack classes from the published taxonomy; starter ships two prompts per class, target five.</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[6]/chart[@id=14]" style="left:34.02pt;top:181.42pt;width:891.97pt;height:311.81pt;background:transparent;display:flex;flex-direction:column;overflow:hidden">
+      <div style="text-align:center;font-size:14pt;font-weight:bold;padding:4px;flex-shrink:0;color:#000000">Evaluation corpus: prompts per class</div>
+      <svg viewBox="0 0 1132 376" style="width:100%;flex:1;min-height:0" preserveAspectRatio="xMidYMin meet">
+        <line x1="63" y1="10" x2="63" y2="351" stroke="#ccc" stroke-width="0.5"/>
+        <line x1="273.8" y1="10" x2="273.8" y2="351" stroke="#ccc" stroke-width="0.5"/>
+        <line x1="484.6" y1="10" x2="484.6" y2="351" stroke="#ccc" stroke-width="0.5"/>
+        <line x1="695.4" y1="10" x2="695.4" y2="351" stroke="#ccc" stroke-width="0.5"/>
+        <line x1="906.2" y1="10" x2="906.2" y2="351" stroke="#ccc" stroke-width="0.5"/>
+        <line x1="1117" y1="10" x2="1117" y2="351" stroke="#ccc" stroke-width="0.5"/>
+        <line x1="63" y1="10" x2="63" y2="351" stroke="#aaa" stroke-width="1"/>
+        <line x1="63" y1="351" x2="1117" y2="351" stroke="#aaa" stroke-width="1"/>
+        <rect x="63" y="27.1" width="843.2" height="22.7" fill="#C9A84C" opacity="1"/>
+        <rect x="63" y="83.9" width="843.2" height="22.7" fill="#C9A84C" opacity="1"/>
+        <rect x="63" y="140.7" width="843.2" height="22.7" fill="#C9A84C" opacity="1"/>
+        <rect x="63" y="197.6" width="843.2" height="22.7" fill="#C9A84C" opacity="1"/>
+        <rect x="63" y="254.4" width="843.2" height="22.7" fill="#C9A84C" opacity="1"/>
+        <rect x="63" y="311.2" width="843.2" height="22.7" fill="#C9A84C" opacity="1"/>
+        <line x1="59" y1="38.4" x2="63" y2="38.4" stroke="#aaa" stroke-width="1"/>
+        <text x="59" y="38.4" fill="#000000" font-size="9" text-anchor="end" dominant-baseline="middle">Semantic</text>
+        <line x1="59" y1="95.3" x2="63" y2="95.3" stroke="#aaa" stroke-width="1"/>
+        <text x="59" y="95.3" fill="#000000" font-size="9" text-anchor="end" dominant-baseline="middle">Schema recon</text>
+        <line x1="59" y1="152.1" x2="63" y2="152.1" stroke="#aaa" stroke-width="1"/>
+        <text x="59" y="152.1" fill="#000000" font-size="9" text-anchor="end" dominant-baseline="middle">Read exfil</text>
+        <line x1="59" y1="208.9" x2="63" y2="208.9" stroke="#aaa" stroke-width="1"/>
+        <text x="59" y="208.9" fill="#000000" font-size="9" text-anchor="end" dominant-baseline="middle">Multi-query</text>
+        <line x1="59" y1="265.8" x2="63" y2="265.8" stroke="#aaa" stroke-width="1"/>
+        <text x="59" y="265.8" fill="#000000" font-size="9" text-anchor="end" dominant-baseline="middle">Write bypass</text>
+        <line x1="59" y1="322.6" x2="63" y2="322.6" stroke="#aaa" stroke-width="1"/>
+        <text x="59" y="322.6" fill="#000000" font-size="9" text-anchor="end" dominant-baseline="middle">Direct DML</text>
+        <line x1="63" y1="351" x2="63" y2="355" stroke="#aaa" stroke-width="1"/>
+        <text x="63" y="367" fill="#000000" font-size="9" text-anchor="middle">0</text>
+        <line x1="273.8" y1="351" x2="273.8" y2="355" stroke="#aaa" stroke-width="1"/>
+        <text x="273.8" y="367" fill="#000000" font-size="9" text-anchor="middle">0.5</text>
+        <line x1="484.6" y1="351" x2="484.6" y2="355" stroke="#aaa" stroke-width="1"/>
+        <text x="484.6" y="367" fill="#000000" font-size="9" text-anchor="middle">1</text>
+        <line x1="695.4" y1="351" x2="695.4" y2="355" stroke="#aaa" stroke-width="1"/>
+        <text x="695.4" y="367" fill="#000000" font-size="9" text-anchor="middle">1.5</text>
+        <line x1="906.2" y1="351" x2="906.2" y2="355" stroke="#aaa" stroke-width="1"/>
+        <text x="906.2" y="367" fill="#000000" font-size="9" text-anchor="middle">2</text>
+        <line x1="1117" y1="351" x2="1117" y2="355" stroke="#aaa" stroke-width="1"/>
+        <text x="1117" y="367" fill="#000000" font-size="9" text-anchor="middle">2.5</text>
+      </svg>
+<div class="chart-legend" data-legend-pos="b" style="display:flex;flex-wrap:wrap;justify-content:center;gap:16px;padding:4px 0;font-size:8pt;color:#000000"><span style="display:inline-flex;align-items:center;gap:4px"><span style="display:inline-block;width:12px;height:12px;background:#C9A84C;border-radius:1px"></span>Starter</span></div>
+    </div>
+    <div class="shape" data-path="/slide[6]/shape[@id=15]" style="left:34.02pt;top:501.73pt;width:891.97pt;height:41.1pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:14pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:14pt;color:#6A6458">False positives reported with the same visibility as block rates. Bars show starter counts; target five per class.</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[6]/shape[@id=100011]" style="left:64.8pt;top:512pt;width:300pt;height:19.84pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-top"><div class="para" style="text-align:left;font-size:10pt;line-height:1.2"><span style="font-family:'Calibri','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:10pt;color:#8899BB">QueryGuard · CS 5391 Group Project Proposal</span></div>
+</div></div>
+    </div>
+  </div>
+</div>
+<div class="slide-container" data-slide="7">
+  <div class="slide-label">Slide 7</div>
+  <div class="slide-wrapper">
+    <div class="slide" style="background:#080A0E;font-family:'Calibri','PingFang SC', 'Hiragino Sans', 'Yu Gothic', 'Apple SD Gothic Neo', 'Microsoft YaHei', 'Noto Sans CJK SC',sans-serif;color:#000000;">
+    <div class="shape has-fill" data-path="/slide[7]/shape[@id=2]" style="left:328.82pt;top:0pt;width:566.93pt;height:566.93pt;background:rgba(201,168,76,0.07);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[7]/shape[@id=3]" style="left:0pt;top:255.12pt;width:283.46pt;height:283.46pt;background:rgba(90,158,72,0.08);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[7]/shape[@id=4]" style="left:737.01pt;top:56.69pt;width:226.77pt;height:426.61pt;background:rgba(201,168,76,0.04)"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[7]/shape[@id=5]" style="left:0pt;top:0pt;width:960pt;height:8.5pt;background:#5A9E48"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[7]/shape[@id=6]" style="left:907.09pt;top:425.2pt;width:85.04pt;height:85.04pt"><div style="position:absolute;inset:0;clip-path:polygon(54.35% 8.7%,100% 54.35%,54.35% 100%,8.7% 54.35%);background:rgba(139,201,74,0.15)"></div><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[7]/shape[@id=7]" style="left:28.35pt;top:85.04pt;width:39.69pt;height:39.69pt;background:rgba(201,168,76,0.5);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[7]/shape[@id=8]" style="left:34.02pt;top:28.35pt;width:255.12pt;height:8.5pt;background:#5A9E48"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[7]/shape[@id=9]" style="left:34.02pt;top:28.35pt;width:255.12pt;height:19.84pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:10pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:10pt;font-weight:bold;color:#080A0E">MILESTONES</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[7]/shape[@id=10]" style="left:34.02pt;top:42.52pt;width:623.62pt;height:94.96pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:36pt;line-height:1.2"><span style="font-family:'Aptos Display','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:36pt;color:#F2F0E8">Three checkpoints, all verifiable</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[7]/shape[@id=11]" style="left:34.02pt;top:133.23pt;width:623.62pt;height:51.02pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:18pt;color:#A8A090">Every checkpoint has a receipt: submission proof, green CI, or a live demo.</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[7]/shape[@id=12]" style="left:34.02pt;top:181.42pt;width:294.8pt;height:240.94pt;background:#141A20;border:0.5pt solid #252820;border-radius:40.16pt"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[7]/shape[@id=13]" style="left:34.02pt;top:181.42pt;width:294.8pt;height:11.34pt;background:#C9A84C"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[7]/shape[@id=14]" style="left:51.02pt;top:204.09pt;width:56.69pt;height:56.69pt"><div style="position:absolute;inset:0;clip-path:polygon(26.67% 71.43%,93.33% 71.43%,69.33% 42.86%,100% 71.43%,69.33% 100%);background:transparent"></div><svg style="position:absolute;inset:0;width:100%;height:100%;overflow:visible" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="26.67 71.43,93.33 71.43,69.33 42.86,100 71.43,69.33 100" fill="none" stroke="#C9A84C" stroke-width="0.5pt" vector-effect="non-scaling-stroke" stroke-linecap="butt" stroke-linejoin="round"/></svg><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[7]/shape[@id=15]" style="left:51.02pt;top:266.46pt;width:260.79pt;height:42.52pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:19pt;line-height:1.2"><span style="font-family:'Aptos Display','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:19pt;color:#C9A84C">Proposal and SRS</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[7]/shape[@id=16]" style="left:51.02pt;top:314.65pt;width:260.79pt;height:96.38pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:15pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:15pt;color:#A8A090">Submitted with review comments recorded before midterm; deck follows the course style rules.</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[7]/shape[@id=17]" style="left:342.99pt;top:181.42pt;width:294.8pt;height:240.94pt;background:#141A20;border:0.5pt solid #252820;border-radius:40.16pt"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[7]/shape[@id=18]" style="left:342.99pt;top:181.42pt;width:294.8pt;height:11.34pt;background:#8BC94A"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[7]/shape[@id=19]" style="left:360pt;top:204.09pt;width:56.69pt;height:56.69pt"><div style="position:absolute;inset:0;clip-path:polygon(55.56% 11.9%,67.78% 44.05%,100% 44.05%,74.44% 67.86%,83.33% 100%,55.56% 79.76%,27.78% 100%,36.67% 67.86%,11.11% 44.05%,43.33% 44.05%);background:transparent"></div><svg style="position:absolute;inset:0;width:100%;height:100%;overflow:visible" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="55.56 11.9,67.78 44.05,100 44.05,74.44 67.86,83.33 100,55.56 79.76,27.78 100,36.67 67.86,11.11 44.05,43.33 44.05" fill="none" stroke="#8BC94A" stroke-width="0.5pt" vector-effect="non-scaling-stroke" stroke-linecap="butt" stroke-linejoin="round"/></svg><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[7]/shape[@id=20]" style="left:360pt;top:266.46pt;width:260.79pt;height:42.52pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:19pt;line-height:1.2"><span style="font-family:'Aptos Display','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:19pt;color:#8BC94A">Build and CI gate</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[7]/shape[@id=21]" style="left:360pt;top:314.65pt;width:260.79pt;height:96.38pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:15pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:15pt;color:#A8A090">Working path from question to verdict after midterm; corpus regression green on every push.</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[7]/shape[@id=22]" style="left:651.97pt;top:181.42pt;width:294.8pt;height:240.94pt;background:#141A20;border:0.5pt solid #252820;border-radius:40.16pt"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[7]/shape[@id=23]" style="left:651.97pt;top:181.42pt;width:294.8pt;height:11.34pt;background:#6A6458"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[7]/shape[@id=24]" style="left:668.98pt;top:204.09pt;width:56.69pt;height:56.69pt"><div style="position:absolute;inset:0;clip-path:polygon(56.82% 14.63%,100% 100%,13.64% 100%,56.82% 51.22%,56.82% 75.61%,56.82% 85.37%,56.82% 90.24%);background:transparent"></div><svg style="position:absolute;inset:0;width:100%;height:100%;overflow:visible" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="56.82 14.63,100 100,13.64 100,56.82 51.22,56.82 75.61,56.82 85.37,56.82 90.24" fill="none" stroke="#6A6458" stroke-width="0.5pt" vector-effect="non-scaling-stroke" stroke-linecap="butt" stroke-linejoin="round"/></svg><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[7]/shape[@id=25]" style="left:668.98pt;top:266.46pt;width:260.79pt;height:42.52pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:19pt;line-height:1.2"><span style="font-family:'Aptos Display','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:19pt;color:#6A6458">Demo</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[7]/shape[@id=26]" style="left:668.98pt;top:314.65pt;width:260.79pt;height:96.38pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:15pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:15pt;color:#A8A090">Scripted demo with live metrics; block shown, numbers on screen, rehearsed twice.</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[7]/shape[@id=100012]" style="left:64.8pt;top:512pt;width:300pt;height:19.84pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-top"><div class="para" style="text-align:left;font-size:10pt;line-height:1.2"><span style="font-family:'Calibri','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:10pt;color:#8899BB">QueryGuard · CS 5391 Group Project Proposal</span></div>
+</div></div>
+    </div>
+  </div>
+</div>
+<div class="slide-container" data-slide="8">
+  <div class="slide-label">Slide 8</div>
+  <div class="slide-wrapper">
+    <div class="slide" style="background:#080A0E;font-family:'Calibri','PingFang SC', 'Hiragino Sans', 'Yu Gothic', 'Apple SD Gothic Neo', 'Microsoft YaHei', 'Noto Sans CJK SC',sans-serif;color:#000000;">
+    <div class="shape has-fill" data-path="/slide[8]/shape[@id=2]" style="left:0pt;top:0pt;width:283.46pt;height:283.46pt;background:rgba(90,158,72,0.1);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[8]/shape[@id=3]" style="left:737.01pt;top:311.81pt;width:340.16pt;height:340.16pt;background:rgba(201,168,76,0.12);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[8]/shape[@id=4]" style="left:340.16pt;top:0pt;width:283.46pt;height:540pt;background:rgba(139,201,74,0.04)"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[8]/shape[@id=5]" style="left:0pt;top:0pt;width:960pt;height:8.5pt;background:#C9A84C"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[8]/shape[@id=6]" style="left:56.69pt;top:240.94pt;width:113.39pt;height:113.39pt"><div style="position:absolute;inset:0;clip-path:polygon(54.35% 8.7%,100% 54.35%,54.35% 100%,8.7% 54.35%);background:rgba(201,168,76,0.2)"></div><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[8]/shape[@id=7]" style="left:907.09pt;top:56.69pt;width:28.35pt;height:28.35pt;background:rgba(201,168,76,0.4);border-radius:50%"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[8]/shape[@id=8]" style="left:34.02pt;top:28.35pt;width:141.73pt;height:8.5pt;background:#C9A84C"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[8]/shape[@id=9]" style="left:34.02pt;top:28.35pt;width:141.73pt;height:19.84pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:10pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:10pt;font-weight:bold;color:#080A0E">NEXT STEPS</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[8]/shape[@id=10]" style="left:34.02pt;top:42.52pt;width:891.97pt;height:85.04pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:38pt;line-height:1.2"><span style="font-family:'Aptos Display','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:38pt;color:#F2F0E8">Immediate action items</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[8]/shape[@id=11]" style="left:34.02pt;top:133.23pt;width:891.97pt;height:39.69pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:18pt;color:#A8A090">Ownership and dates for the three items that unblock everything else.</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[8]/shape[@id=12]" style="left:34.02pt;top:181.42pt;width:891.97pt;height:99.21pt;background:#141A20;border:0.5pt solid #252820"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[8]/shape[@id=13]" style="left:34.02pt;top:181.42pt;width:11.34pt;height:99.21pt;background:#C9A84C"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[8]/shape[@id=14]" style="left:62.36pt;top:209.76pt;width:42.52pt;height:42.52pt"><div style="position:absolute;inset:0;clip-path:polygon(18.29% 69.44%,46.34% 100%,100% 30.56%);background:transparent"></div><svg style="position:absolute;inset:0;width:100%;height:100%;overflow:visible" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="18.29 69.44,46.34 100,100 30.56" fill="none" stroke="#C9A84C" stroke-width="0.5pt" vector-effect="non-scaling-stroke" stroke-linecap="butt" stroke-linejoin="round"/></svg><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[8]/shape[@id=15]" style="left:119.06pt;top:195.59pt;width:680.31pt;height:39.69pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:20pt;line-height:1.2"><span style="font-family:'Aptos Display','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:20pt;color:#F2F0E8">Confirm topic, stack and lanes with the group</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[8]/shape[@id=16]" style="left:119.06pt;top:245.2pt;width:42.52pt;height:42.52pt"><div style="position:absolute;inset:0;clip-path:polygon(54.35% 8.7%,100% 54.35%,54.35% 100%,8.7% 54.35%);background:transparent"></div><svg style="position:absolute;inset:0;width:100%;height:100%;overflow:visible" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="54.35 8.7,100 54.35,54.35 100,8.7 54.35" fill="none" stroke="#C9A84C" stroke-width="0.5pt" vector-effect="non-scaling-stroke" stroke-linecap="butt" stroke-linejoin="round"/></svg><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[8]/shape[@id=17]" style="left:175.75pt;top:240.94pt;width:340.16pt;height:34.02pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:13pt;line-height:1.2"><span style="font-family:'Calibri','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:13pt;color:#6A6458">Operator + group</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[8]/shape[@id=18]" style="left:727.56pt;top:212.6pt;width:198.43pt;height:36.85pt;background:rgba(201,168,76,0.15)"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[8]/shape[@id=19]" style="left:727.56pt;top:212.6pt;width:198.43pt;height:36.85pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:15pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:15pt;font-weight:bold;color:#C9A84C">This week</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[8]/shape[@id=20]" style="left:34.02pt;top:294.8pt;width:891.97pt;height:99.21pt;background:#141A20;border:0.5pt solid #252820"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[8]/shape[@id=21]" style="left:34.02pt;top:294.8pt;width:11.34pt;height:99.21pt;background:#8BC94A"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[8]/shape[@id=22]" style="left:62.36pt;top:323.15pt;width:42.52pt;height:42.52pt"><div style="position:absolute;inset:0;clip-path:polygon(18.29% 69.44%,46.34% 100%,100% 30.56%);background:transparent"></div><svg style="position:absolute;inset:0;width:100%;height:100%;overflow:visible" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="18.29 69.44,46.34 100,100 30.56" fill="none" stroke="#8BC94A" stroke-width="0.5pt" vector-effect="non-scaling-stroke" stroke-linecap="butt" stroke-linejoin="round"/></svg><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[8]/shape[@id=23]" style="left:119.06pt;top:308.98pt;width:680.31pt;height:39.69pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:20pt;line-height:1.2"><span style="font-family:'Aptos Display','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:20pt;color:#F2F0E8">Capture Canvas project page and midterm date</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[8]/shape[@id=24]" style="left:119.06pt;top:358.58pt;width:42.52pt;height:42.52pt"><div style="position:absolute;inset:0;clip-path:polygon(54.35% 8.7%,100% 54.35%,54.35% 100%,8.7% 54.35%);background:transparent"></div><svg style="position:absolute;inset:0;width:100%;height:100%;overflow:visible" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="54.35 8.7,100 54.35,54.35 100,8.7 54.35" fill="none" stroke="#8BC94A" stroke-width="0.5pt" vector-effect="non-scaling-stroke" stroke-linecap="butt" stroke-linejoin="round"/></svg><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[8]/shape[@id=25]" style="left:175.75pt;top:354.33pt;width:340.16pt;height:34.02pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:13pt;line-height:1.2"><span style="font-family:'Calibri','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:13pt;color:#6A6458">Operator</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[8]/shape[@id=26]" style="left:727.56pt;top:325.98pt;width:198.43pt;height:36.85pt;background:rgba(139,201,74,0.15)"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[8]/shape[@id=27]" style="left:727.56pt;top:325.98pt;width:198.43pt;height:36.85pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:15pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:15pt;font-weight:bold;color:#8BC94A">Sep 2026</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[8]/shape[@id=28]" style="left:34.02pt;top:408.19pt;width:891.97pt;height:99.21pt;background:#141A20;border:0.5pt solid #252820"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[8]/shape[@id=29]" style="left:34.02pt;top:408.19pt;width:11.34pt;height:99.21pt;background:#6A6458"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[8]/shape[@id=30]" style="left:62.36pt;top:436.54pt;width:42.52pt;height:42.52pt"><div style="position:absolute;inset:0;clip-path:polygon(18.29% 69.44%,46.34% 100%,100% 30.56%);background:transparent"></div><svg style="position:absolute;inset:0;width:100%;height:100%;overflow:visible" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="18.29 69.44,46.34 100,100 30.56" fill="none" stroke="#6A6458" stroke-width="0.5pt" vector-effect="non-scaling-stroke" stroke-linecap="butt" stroke-linejoin="round"/></svg><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[8]/shape[@id=31]" style="left:119.06pt;top:422.36pt;width:680.31pt;height:39.69pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:20pt;line-height:1.2"><span style="font-family:'Aptos Display','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:20pt;color:#F2F0E8">Grow evaluation corpus to 30 attacks + 30 benign</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[8]/shape[@id=32]" style="left:119.06pt;top:464.88pt;width:42.52pt;height:42.52pt"><div style="position:absolute;inset:0;clip-path:polygon(54.35% 8.7%,100% 54.35%,54.35% 100%,8.7% 54.35%);background:transparent"></div><svg style="position:absolute;inset:0;width:100%;height:100%;overflow:visible" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="54.35 8.7,100 54.35,54.35 100,8.7 54.35" fill="none" stroke="#6A6458" stroke-width="0.5pt" vector-effect="non-scaling-stroke" stroke-linecap="butt" stroke-linejoin="round"/></svg><div class="shape-text valign-center" style="position:relative;"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[8]/shape[@id=33]" style="left:175.75pt;top:467.72pt;width:340.16pt;height:34.02pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:13pt;line-height:1.2"><span style="font-family:'Calibri','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:13pt;color:#6A6458">All team members</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[8]/shape[@id=34]" style="left:727.56pt;top:439.37pt;width:198.43pt;height:36.85pt;background:rgba(106,100,88,0.15)"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[8]/shape[@id=35]" style="left:727.56pt;top:439.37pt;width:198.43pt;height:36.85pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-center"><div class="para" style="font-size:15pt;line-height:1.2"><span style="font-family:'Aptos','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:15pt;font-weight:bold;color:#6A6458">Oct 2026</span></div>
+</div></div>
+    <div class="shape has-fill" data-path="/slide[8]/shape[@id=36]" style="left:34.02pt;top:510.24pt;width:891.97pt;height:5.67pt;background:#C9A84C"><div class="shape-text valign-center"><div class="para" style="font-size:18pt;line-height:1.2"><span style="font-size:18pt">&nbsp;</span></div>
+</div></div>
+    <div class="shape" data-path="/slide[8]/shape[@id=100013]" style="left:64.8pt;top:512pt;width:300pt;height:19.84pt;background:transparent;padding:3.6pt 7.2pt 3.6pt 7.2pt"><div class="shape-text valign-top"><div class="para" style="text-align:left;font-size:10pt;line-height:1.2"><span style="font-family:'Calibri','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;font-size:10pt;color:#8899BB">QueryGuard · CS 5391 Group Project Proposal</span></div>
+</div></div>
+    </div>
+  </div>
+  <div class="slide-notes">
+    <div class="slide-notes-label">Notes</div>
+    <div class="slide-notes-body">
+      <div>Closing line (spoken, not on slide): A measured gate that explains itself turns AI-generated SQL from a risk into a demo. End on the three action items and their dates.</div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="page-counter">1 / 8</div>
+<script>
+// OfficeCli HTML Preview Script
+(function() {
+    const main = document.querySelector('.main');
+    const sidebar = document.querySelector('.sidebar');
+    const counter = document.querySelector('.page-counter');
+    let currentSlide = 0;
+    let isFullscreen = false;
+
+    // ===== Live DOM queries (SSE may add/remove elements) =====
+    function getContainers() { return [...document.querySelectorAll('.main > .slide-container')]; }
+    function getThumbs() { return [...document.querySelectorAll('.sidebar > .thumb')]; }
+    function getTotal() { return getContainers().length; }
+
+    // ===== Responsive scaling =====
+    function scaleSlides() {
+        // 40px breathing room for interactive viewing; headless captures fill the
+        // viewport (the screenshot path sizes it to the slide) so they take none.
+        const headless = document.documentElement.classList.contains('headless');
+        const availW = main.clientWidth - (headless ? 0 : 40);
+        const slides = document.querySelectorAll('.main > .slide-container .slide');
+        // A lone headless slide is a single-slide screenshot: scale it to fill the
+        // viewport in BOTH directions (up or down) so the capture is flush at the
+        // requested resolution regardless of the slide's physical size. Interactive
+        // and multi-slide views only ever shrink to fit.
+        const fill = headless && slides.length === 1;
+        slides.forEach(slide => {
+            const designW = slide.offsetWidth;
+            if (availW > 0 && (fill || designW > availW)) {
+                const s = availW / designW;
+                slide.style.transform = `scale(${s})`;
+                slide.style.transformOrigin = 'center top';
+                const designH = slide.offsetHeight;
+                slide.parentElement.style.height = (designH * s) + 'px';
+                slide.parentElement.style.width = (designW * s) + 'px';
+            } else {
+                slide.style.transform = '';
+                slide.parentElement.style.height = '';
+                slide.parentElement.style.width = '';
+            }
+        });
+    }
+    scaleSlides();
+    window.scaleSlides = scaleSlides;
+    window.addEventListener('resize', scaleSlides);
+
+    // ===== Sidebar thumbnails =====
+    function setActiveThumb(idx) {
+        getThumbs().forEach((t, i) => t.classList.toggle('active', i === idx));
+        currentSlide = idx;
+        if (counter) counter.textContent = `${idx + 1} / ${getTotal()}`;
+    }
+
+    // Event delegation for thumb clicks (handles SSE-added thumbs)
+    if (sidebar) {
+        sidebar.addEventListener('click', function(e) {
+            const thumb = e.target.closest('.thumb');
+            if (!thumb) return;
+            const thumbs = getThumbs();
+            const idx = thumbs.indexOf(thumb);
+            if (idx < 0) return;
+            if (isFullscreen) { showFullscreenSlide(idx); return; }
+            const containers = getContainers();
+            if (containers[idx]) {
+                containers[idx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            setActiveThumb(idx);
+        });
+    }
+
+    // Track visible slide on scroll (normal mode) — use MutationObserver to auto-observe new slides
+    let scrollObserver;
+    if (main) {
+        scrollObserver = new IntersectionObserver(entries => {
+            if (isFullscreen) return;
+            const containers = getContainers();
+            entries.forEach(e => {
+                if (e.isIntersecting && e.intersectionRatio > 0.3) {
+                    const idx = containers.indexOf(e.target);
+                    if (idx >= 0) setActiveThumb(idx);
+                }
+            });
+        }, { root: main, threshold: 0.3 });
+        getContainers().forEach(c => scrollObserver.observe(c));
+
+        // Auto-observe new slide-containers added to main
+        new MutationObserver(mutations => {
+            mutations.forEach(m => {
+                m.addedNodes.forEach(node => {
+                    if (node.nodeType === 1 && node.classList.contains('slide-container')) {
+                        scrollObserver.observe(node);
+                    }
+                });
+            });
+        }).observe(main, { childList: true });
+    }
+
+    // ===== Fullscreen mode =====
+    function showFullscreenSlide(idx) {
+        const containers = getContainers();
+        const total = containers.length;
+        idx = Math.max(0, Math.min(idx, total - 1));
+        containers.forEach((c, i) => c.classList.toggle('fs-active', i === idx));
+        setActiveThumb(idx);
+        const slide = containers[idx]?.querySelector('.slide');
+        if (slide) {
+            const vw = window.innerWidth, vh = window.innerHeight - 30;
+            const sw = slide.scrollWidth || slide.offsetWidth;
+            const sh = slide.scrollHeight || slide.offsetHeight;
+            const s = Math.min(vw / sw, vh / sh, 1);
+            slide.style.transform = `scale(${s})`;
+            slide.style.transformOrigin = 'center top';
+        }
+    }
+    function enterFullscreen() {
+        isFullscreen = true;
+        document.body.classList.add('fullscreen');
+        showFullscreenSlide(currentSlide);
+    }
+    function exitFullscreen() {
+        isFullscreen = false;
+        document.body.classList.remove('fullscreen');
+        getContainers().forEach(c => { c.classList.remove('fs-active'); c.style.display = ''; });
+        scaleSlides();
+        getContainers()[currentSlide]?.scrollIntoView({ block: 'center' });
+    }
+
+    // ===== Keyboard navigation =====
+    document.addEventListener('keydown', e => {
+        if (e.key === 'f' || e.key === 'F') {
+            e.preventDefault();
+            isFullscreen ? exitFullscreen() : enterFullscreen();
+            return;
+        }
+        if (e.key === 'Escape' && isFullscreen) {
+            e.preventDefault();
+            exitFullscreen();
+            return;
+        }
+        const next = e.key === 'ArrowDown' || e.key === ' ' || e.key === 'ArrowRight';
+        const prev = e.key === 'ArrowUp' || e.key === 'ArrowLeft';
+        if (!next && !prev) return;
+        e.preventDefault();
+
+        const total = getTotal();
+        if (isFullscreen) {
+            showFullscreenSlide(currentSlide + (next ? 1 : -1));
+        } else {
+            const target = next
+                ? Math.min(currentSlide + 1, total - 1)
+                : Math.max(currentSlide - 1, 0);
+            const containers = getContainers();
+            if (containers[target]) {
+                containers[target].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            setActiveThumb(target);
+        }
+    });
+
+    // ===== Populate & scale thumbnail slides via cloneNode (zero base64 duplication) =====
+    function buildThumbs() {
+        const slides = document.querySelectorAll('.main > .slide-container .slide');
+        const inners = document.querySelectorAll('.thumb-inner');
+        slides.forEach((slide, i) => {
+            if (i >= inners.length) return;
+            const inner = inners[i];
+            if (inner.querySelector('.thumb-slide')) return;
+            const clone = slide.cloneNode(true);
+            clone.className = 'thumb-slide';
+            clone.style.transform = '';
+            // Remove IDs from cloned elements to avoid getElementById conflicts (e.g. 3D canvas)
+            clone.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+            // Remove cloned <script> tags (module scripts won't re-execute but keep DOM clean)
+            clone.querySelectorAll('script').forEach(el => el.remove());
+            inner.appendChild(clone);
+        });
+        scaleThumbs();
+    }
+    function scaleThumbs() {
+        document.querySelectorAll('.thumb-inner').forEach(inner => {
+            const thumbSlide = inner.querySelector('.thumb-slide');
+            if (!thumbSlide) return;
+            const thumbW = inner.clientWidth;
+            const slideW = thumbSlide.scrollWidth || thumbSlide.offsetWidth;
+            if (slideW > 0 && thumbW > 0) {
+                thumbSlide.style.transform = `scale(${thumbW / slideW})`;
+                thumbSlide.style.transformOrigin = '0 0';
+            }
+        });
+    }
+    buildThumbs();
+    window.buildThumbs = buildThumbs;
+    window.scaleThumbs = scaleThumbs;
+    window.addEventListener('resize', scaleThumbs);
+
+    // ===== Sidebar toggle (exposed globally for onclick) =====
+    window.toggleSidebar = function() {
+        document.body.classList.toggle('sidebar-visible');
+        document.body.classList.toggle('sidebar-hidden');
+        // Re-scale after sidebar toggle changes main area width
+        requestAnimationFrame(() => {
+            scaleSlides();
+            buildThumbs();
+            scaleThumbs();
+        });
+    };
+
+    // Init
+    if (getTotal() > 0) setActiveThumb(0);
+})();
+
+</script>
+<script>
+(function() {
+    var _katexRetries = 0;
+    function fallbackKatex() {
+        document.querySelectorAll('.katex-formula:not(.katex-rendered)').forEach(function(el) {
+            el.textContent = el.dataset.formula;
+            el.style.fontFamily = 'monospace';
+            el.style.color = '#666';
+            el.classList.add('katex-rendered');
+        });
+    }
+    function renderKatex() {
+        var pending = document.querySelectorAll('.katex-formula:not(.katex-rendered)');
+        if (pending.length === 0) return;
+        if (typeof katex === 'undefined') {
+            // Lazy-load on first demand — handles watch mode where the initial
+            // doc had no formulas (KaTeX tags omitted from head), then a
+            // formula arrived via SSE patch.
+            if (!window._katexLoading) {
+                window._katexLoading = true;
+                // CONSISTENCY(katex-mirror): mirror-first, CDN retry, then fallback.
+                var link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = 'https://d.officecli.ai/assets/katex-0.16.11/katex.min.css';
+                link.onerror = function() { if (!this.dataset.f) { this.dataset.f = 1; this.href = 'https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css'; } else { this.remove(); } };
+                document.head.appendChild(link);
+                var script = document.createElement('script');
+                script.src = 'https://d.officecli.ai/assets/katex-0.16.11/katex.min.js';
+                script.onload = renderKatex;
+                script.onerror = function() { var s2 = document.createElement('script'); s2.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js'; s2.onload = renderKatex; s2.onerror = fallbackKatex; document.head.appendChild(s2); };
+                document.head.appendChild(script);
+                return;
+            }
+            if (++_katexRetries > 20) { fallbackKatex(); return; }
+            setTimeout(renderKatex, 100); return;
+        }
+        pending.forEach(function(el) {
+            try {
+                katex.render(el.dataset.formula, el, { throwOnError: false, displayMode: true });
+                el.classList.add('katex-rendered');
+            } catch(e) { el.textContent = el.dataset.formula + ' (Error: ' + e.message + '. See https://katex.org/docs/supported.html for supported syntax.)'; }
+        });
+    }
+    // Initial render
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', renderKatex);
+    else renderKatex();
+    // Re-render when DOM changes (watch mode incremental updates)
+    new MutationObserver(function() { renderKatex(); }).observe(document.body, { childList: true, subtree: true });
+})();
+</script>
+</body>
+</html>

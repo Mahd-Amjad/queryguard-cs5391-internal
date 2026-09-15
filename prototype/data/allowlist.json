@@ -1,0 +1,6 @@
+{
+  "queryable_tables": ["patients", "appointments", "doctors", "billing", "medications", "prescriptions", "staff"],
+  "sensitive_columns": ["ssn", "diagnosis", "paid"],
+  "catalog_tables": ["information_schema", "sqlite_master", "sqlite_temp_master", "pragma_table_list"],
+  "blocked_functions": ["load_extension", "writefile", "readfile", "edit"]
+}

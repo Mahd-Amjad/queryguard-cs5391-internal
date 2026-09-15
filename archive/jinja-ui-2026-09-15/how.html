@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}QueryGuard — how it works{% endblock %}
+{% block pagetitle %}How it works{% endblock %}
+{% block content %}
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header"><h3 class="card-title">The idea in three steps</h3></div>
+      <div class="card-body">
+        <p><strong>1. You ask a question</strong> in plain English: "How many appointments are scheduled in March?"</p>
+        <p><strong>2. An AI drafts the database query</strong> that would answer it. You see exactly what it wrote.</p>
+        <p class="mb-0"><strong>3. A safety gate checks the query before anything runs.</strong> Nine rules block
+           destructive or snooping queries, private columns are removed from answers, and every decision is
+           written to a log. Only queries that pass are executed.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header"><h3 class="card-title">Why this matters</h3></div>
+      <div class="card-body">
+        <p class="mb-2">AI-generated SQL is powerful but risky: one wrong or malicious query could delete records
+           or expose private data.</p>
+        <p class="mb-0">QueryGuard makes the risk visible and controlled: nothing runs unchecked, nothing private
+           leaks, and the numbers on the <a href="/ui/metrics">Metrics page</a> prove it.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h3 class="card-title">The nine safety rules</h3></div>
+  <div class="table-responsive">
+    <table class="table table-vcenter card-table">
+      <tr><th>Rule</th><th>What it stops</th></tr>
+      {% for rid, r in rules.items() %}
+      <tr>
+        <td><span class="badge bg-secondary-lt">{{ rid }}</span> {{ r.name }}</td>
+        <td>{{ r.plain }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  <div class="card-footer text-secondary">
+    Verdicts: PASS = ran as asked · MASK = answered with private columns removed · BLOCK = stopped, nothing ran.
+    Every decision is recorded, so the <a href="/ui/audit">Audit log</a> always matches what you see here.
+  </div>
+</div>
+{% endblock %}

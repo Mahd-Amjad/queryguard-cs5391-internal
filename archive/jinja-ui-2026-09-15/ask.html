@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block pagetitle %}Ask a question{% endblock %}
+{% block content %}
+<div class="qg-fill">
+<div class="row g-3">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-body">
+        <div class="subheader mb-2">Your question</div>
+        <form method="post" action="/ask">
+          <div class="input-icon input-icon-lg">
+            <span class="input-icon-addon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 5h16v10H8l-4 4z"/>
+              </svg>
+            </span>
+            <input type="text" class="form-control form-control-lg" name="question" autocomplete="off"
+                   placeholder="e.g. How many appointments are scheduled in March?"
+                   value="{{ result.question if result else '' }}">
+          </div>
+          <div class="mt-2 d-flex flex-wrap gap-1">
+            {% for ex in examples %}
+            <button type="submit" class="btn btn-pill btn-outline-secondary btn-sm" name="question" value="{{ ex }}">{{ ex }}</button>
+            {% endfor %}
+          </div>
+          <div class="mt-3 d-flex align-items-center gap-2">
+            <button type="submit" class="btn btn-primary">
+              Ask
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="ms-1">
+                <path d="M5 12l14 0M13 6l6 6-6 6"/>
+              </svg>
+            </button>
+            <span class="text-secondary small ms-2">Nothing runs before the gate passes it.</span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card">
+      <div class="card-body">
+        <div class="subheader mb-2">What this does</div>
+        <p class="mb-1"><strong>1.</strong> You ask a question in plain English.</p>
+        <p class="mb-1"><strong>2.</strong> An AI drafts the database query that answers it.</p>
+        <p class="mb-0"><strong>3.</strong> The safety gate checks that query before anything runs.
+           <a href="/ui/how">The nine rules it applies</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if result %}
+{% set vclass = {'PASS': 'v-PASS', 'BLOCK': 'v-BLOCK', 'MASK': 'v-MASK'}.get(result.verdict, '') %}
+{% set vicon = {'PASS': 'M9 12l2 2 4-4M12 3l7 3v5c0 4.6-2.9 8-7 10-4.1-2-7-5.4-7-10V6z',
+                'MASK': 'M3 3l18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M8 4h9a2 2 0 0 1 2 2v9M17 17H6l-2 2V6a2 2 0 0 1 2-2',
+                'BLOCK': 'M12 3l7 3v5c0 4.6-2.9 8-7 10-4.1-2-7-5.4-7-10V6zM10 10l4 4M14 10l-4 4'}.get(result.verdict, '') %}
+<div class="row g-3 mt-0">
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Answer</h3>
+        <div class="card-actions">
+          <span class="badge {{ vclass }}">{{ result.verdict }}</span>
+        </div>
+      </div>
+      <div class="card-body">
+        {% if result.answer %}
+          <table class="table table-vcenter table-striped">
+            <thead><tr>{% for c in result.answer.columns %}<th>{{ c }}</th>{% endfor %}</tr></thead>
+            <tbody>
+            {% for row in result.answer.rows[:10] %}
+            <tr>{% for v in row %}<td>{{ v }}</td>{% endfor %}</tr>
+            {% endfor %}
+            </tbody>
+          </table>
+          <div class="text-secondary">{{ result.answer.row_count }} row{{ '' if result.answer.row_count == 1 else 's' }}</div>
+        {% else %}
+          <div class="empty">
+            <p class="empty-title">No answer returned</p>
+            <p class="empty-subtitle text-secondary">Nothing ran, nothing changed.</p>
+          </div>
+        {% endif %}
+        {% if result.suggestion %}<div class="callout mt-2">Suggestion: {{ result.suggestion }}</div>{% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">The safety check</h3>
+      </div>
+      <div class="card-body">
+        <div class="d-flex align-items-center mb-2">
+          <span class="stat-icon me-2" style="color: {{ {'PASS': '#43d17c', 'BLOCK': '#e74c3c', 'MASK': '#e8b341'}.get(result.verdict, '#9fb3c8') }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="{{ vicon }}"/>
+            </svg>
+          </span>
+          <div>
+            <span class="badge {{ vclass }}">{{ result.verdict }}</span>
+            {% if result.rule_id != "OK" %}<span class="badge bg-secondary-lt ms-1">{{ rule_name(result.rule_id) }}</span>{% else %}<span class="badge bg-secondary-lt ms-1">No rule broken</span>{% endif %}
+          </div>
+        </div>
+        <p><strong>{{ verdict_plain(result.verdict) }}</strong></p>
+        <p class="text-secondary mb-2">{{ plain_reason(result.reason) }}</p>
+        <div class="d-flex align-items-center text-secondary">
+          <span class="me-2">Checked in {{ result.elapsed_ms }} ms</span>
+          <div class="progress progress-sm flex-grow-1 me-2">
+            <div class="progress-bar bg-green" style="width: {{ [100, (result.elapsed_ms / 50 * 100)|round|int]|min }}%"></div>
+          </div>
+          <span class="small">target &lt; 50 ms</span>
+        </div>
+        <p class="text-secondary mt-2 mb-0">Recorded on the <a href="/ui/audit">Audit log</a></p>
+        <div class="subheader mt-3 mb-2">Generated SQL</div>
+        <pre class="sql">{{ result.sql }}</pre>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+</div>
+{% endblock %}

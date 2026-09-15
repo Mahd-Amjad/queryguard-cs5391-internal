@@ -1,0 +1,33 @@
+name: Evaluation run
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Generator mode'
+        required: true
+        default: 'mock'
+        type: choice
+        options: [mock, live]
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run full corpus evaluation
+        run: python scripts/run_eval.py --corpus data/corpus.jsonl --mode ${{ inputs.mode }} --report out/report.md
+
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-report-${{ inputs.mode }}
+          path: out/report.md

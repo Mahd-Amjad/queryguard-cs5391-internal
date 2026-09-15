@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}QueryGuard — audit{% endblock %}
+{% block pagetitle %}Audit log{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">Every question ever asked, and what the gate did</h3>
+    <div class="card-actions text-secondary small">
+      Nothing is edited or deleted: this list only grows.
+    </div>
+  </div>
+  <div class="card-body py-2">
+    <span class="badge v-PASS">PASS</span> ran as asked &nbsp;·&nbsp;
+    <span class="badge v-MASK">MASK</span> answered with private columns removed &nbsp;·&nbsp;
+    <span class="badge v-BLOCK">BLOCK</span> stopped before touching data
+  </div>
+  <div class="table-responsive">
+    <table class="table table-vcenter card-table">
+      <tr><th>When</th><th>Question</th><th>Outcome</th><th>Why</th><th>Check</th></tr>
+      {% for r in entries %}
+      <tr>
+        <td class="text-secondary">{{ r.ts[:16] }}</td>
+        <td>{{ r.question[:70] }}</td>
+        <td><span class="badge v-{{ r.verdict }}">{{ r.verdict }}</span></td>
+        <td>{{ rule_name(r.rule_id) }}</td>
+        <td class="text-secondary">{{ r.latency_ms }} ms</td>
+      </tr>
+      {% endfor %}
+      {% if not entries %}<tr><td colspan="5" class="text-secondary">no questions yet</td></tr>{% endif %}
+    </table>
+  </div>
+  <div class="card-footer d-flex align-items-center">
+    {% if page > 1 %}<a class="btn btn-outline-secondary btn-sm" href="/ui/audit?page={{ page - 1 }}">&larr; newer</a>{% endif %}
+    <span class="text-secondary mx-2">page {{ page }} of {{ pages if pages else 1 }} · {{ total }} total</span>
+    {% if page < pages %}<a class="btn btn-outline-secondary btn-sm" href="/ui/audit?page={{ page + 1 }}">older &rarr;</a>{% endif %}
+    <a class="btn btn-link btn-sm ms-auto" href="/ui/how">What each rule means</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+yeah it runs, I ran it again today. it's just a flask app:
+
+clone the repo, then
+
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+.venv/bin/python -m queryguard.app
+
+opens on localhost:5055. the demo database builds itself on first run, no api keys, nothing else to set up. and don't apologize, the question made sense :)
+
+on the ai tools: yeah, I used them for most of the code. my part was mostly reviewing what it wrote and writing the tests around it (40 of them now, plus a 64-question test set where every attack gets stopped). I'd rather be honest about that going in, and it honestly fits the course theme. we can decide together how we talk about it in the presentation.
+
+you read the structure right btw. static/ is just the css. the actual pages are flask templates in templates/, and that folder is basically your lane. everything already runs, so it's really just wording and layout changes from here. want me to walk you through the files sometime this week?

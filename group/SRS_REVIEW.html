@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Review copy of the QueryGuard requirement document for Arwa: what we are building, the nine safety rules, measured results, and what we need from her before submission.">
+<title>What are we building, and does the plan hold up? · QueryGuard requirement document</title>
+<style>
+  :root { --ink:#dbdee1; --sub:#c7ccd1; --line:#3a3c44; --accent:#f2f3f5; --info:#4aa0ad; --bad:#dd6a6c; --ok:#74c79a; --warn:#ddd08a; --bg:#121316; --card:#1b1d21; --panel:#24262b; --title:#e5913c; --title2:#f2f3f5; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'gg sans','Segoe UI',system-ui,-apple-system,Arial,sans-serif; color:var(--ink); background:var(--bg); line-height:1.55; padding:32px 16px; }
+  @media print { :root { --ink:#2e3338; --sub:#4e5058; --line:#d6d8dc; --accent:#111217; --info:#2b7a8c; --bad:#d83c3e; --ok:#23a55a; --warn:#cc952c; --bg:#ffffff; --card:#ffffff; --panel:#f2f3f5; --title:#4752c4; --title2:#111217; } }
+  .page { max-width:860px; margin:0 auto; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:40px 48px; }
+  header { background:var(--panel); padding:26px 30px 18px; margin-bottom:18px; border-radius:10px; border:1px solid var(--line); }
+  .kicker { font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--title2); font-weight:700; }
+  h1 { font-family:Georgia,'Times New Roman',serif; font-size:30px; margin:6px 0 6px; color:var(--title); letter-spacing:.01em; }
+  .meta { font-size:13px; color:var(--sub); }
+  .glance { display:flex; flex-wrap:wrap; gap:10px; margin:0 0 22px; }
+  .glance div { flex:1 1 200px; border:1px solid var(--line); border-radius:8px; padding:10px 14px; font-size:13px; background:var(--panel); line-height:1.45; }
+  .glance b { display:block; font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--sub); margin-bottom:2px; }
+  .dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; vertical-align:0; }
+  .dot-ok { background:var(--ok); } .dot-doing { background:var(--warn); } .dot-info { background:var(--info); }
+  h2 { font-size:19px; margin:28px 0 12px; padding:6px 0 6px 12px; border-top:1px solid var(--line); border-left:4px solid #6d28d9; color:var(--title2); }
+  h3 { font-size:15.5px; margin:18px 0 8px; color:var(--title2); }
+  table { width:100%; border-collapse:collapse; font-size:13.5px; margin:10px 0; }
+  th { text-align:left; background:var(--panel); padding:7px 10px; border:1px solid var(--line); font-size:12.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--sub); }
+  td { padding:7px 10px; border:1px solid var(--line); vertical-align:top; }
+  ul { margin:8px 0 8px 20px; }
+  li { margin:4px 0; }
+  .good { color:var(--ok); font-weight:600; }
+  .badt { color:var(--bad); font-weight:600; }
+  .muted { color:var(--sub); font-size:13px; }
+  .r-ok { border-left:4px solid var(--ok); } .r-warn { border-left:4px solid var(--warn); } .r-info { border-left:4px solid #4aa0ad; } .r-bad { border-left:4px solid var(--bad); }
+  .verdict { background:var(--panel); border-left:4px solid var(--accent); border-radius:6px; padding:14px 18px; margin:0 0 22px; font-size:15px; }
+  .verdict b { display:block; margin-bottom:2px; }
+  code { background:#17181c; border:1px solid var(--line); border-radius:4px; padding:1px 6px; font-size:12.5px; font-family:Consolas,monospace; color:var(--ink); }
+  footer { margin-top:26px; padding-top:12px; border-top:1px solid var(--line); font-size:12px; color:var(--sub); }
+  @media print { body { background:#fff; padding:0; } .page { border:none; padding:20px 8px; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="kicker">Requirement document · Group Project 1<span class="sev" style="background:var(--info)">REVIEW COPY</span></div>
+    <h1>What are we building, and does the plan hold up?</h1>
+    <div class="meta">QueryGuard, the safety gate for AI-written SQL · Mahd &amp; Arwa · Prepared by Mahd, September 12, 2026 · For Arwa's review before submission</div>
+  </header>
+
+  <div class="glance">
+    <div><b><span class="dot dot-ok"></span>The product</b>You ask a question in English. An AI drafts the SQL. Our gate checks it before anything touches the database</div>
+    <div><b><span class="dot dot-ok"></span>Attacks stopped</b><span class="good">100%</span> on 34 attack cases, measured. Every destructive, sneaky, or snooping query was caught</div>
+    <div><b><span class="dot dot-ok"></span>False alarms</b><span class="good">0</span> on 30 safe questions. Normal questions are never wrongly punished</div>
+    <div><b><span class="dot dot-info"></span>Proof behind the claims</b>40 automated tests, a 64-case labeled test set, and 384 rewrite-stability checks, all passing</div>
+    <div><b><span class="dot dot-doing"></span>What we need from you</b>Read this (about 20 minutes). Mark anything unclear, wrong, or missing. Pick your presentation part</div>
+  </div>
+
+  <div class="verdict">
+    <b>Summary</b>
+    The requirement document is written and the system it describes already exists and works. The shape: a user asks a question, an AI drafts a database query, and a deterministic gate checks that query against nine safety rules before it runs. Dangerous queries are blocked with an explanation, private columns like SSNs are removed from answers, and every decision is logged in a tamper-evident style record anyone can inspect afterward. The measured results on our 64-case test set are strong: every attack stopped, zero false alarms, checks taking well under a millisecond. The honest thin spots: the live AI mode is not built yet (the demo runs on a deterministic stand-in, by design), and one advanced rule (does the query match what the user actually asked) is marked stretch and can be dropped without hurting the demo.
+  </div>
+
+  <h2>1 · The product in one path</h2>
+  <p>Every question follows the same five steps, and that path is the whole product:</p>
+  <table>
+    <tr><th>Step</th><th>What happens</th><th>Why it matters</th></tr>
+    <tr class="r-info"><td><b>1. Intake</b></td><td>The question enters through one door, so every request is recorded the same way</td><td>No side doors means no unlogged decisions</td></tr>
+    <tr class="r-info"><td><b>2. Draft</b></td><td>The AI writes the SQL query that would answer the question</td><td>This is the powerful, risky part: the AI's output is never trusted directly</td></tr>
+    <tr class="r-ok"><td><b>3. The gate</b></td><td>Nine safety rules run on the parsed query. PASS, BLOCK, or MASK (private columns removed)</td><td>This is the project. Every rule is a numbered requirement with its own test</td></tr>
+    <tr class="r-ok"><td><b>4. Execute</b></td><td>Only passed queries touch the database, on a read-only connection</td><td>Even if a rule were bypassed, the database physically cannot be changed</td></tr>
+    <tr class="r-ok"><td><b>5. The log</b></td><td>Every decision is written down before the user sees anything</td><td>The audit page lets anyone verify what ran and why</td></tr>
+  </table>
+
+  <h2>2 · The nine rules, in plain language</h2>
+  <table>
+    <tr><th>Rule</th><th>What it stops</th></tr>
+    <tr class="r-ok"><td><b>No destructive statements</b></td><td>Queries that change or delete data. The database is read-only, full stop</td></tr>
+    <tr class="r-ok"><td><b>One query at a time</b></td><td>Stacking a second command onto a question ("...also drop that table")</td></tr>
+    <tr class="r-ok"><td><b>No hidden write commands</b></td><td>Write commands disguised with comment tricks, caught by cleaning the query before judging it</td></tr>
+    <tr><td><b>Only allowed tables</b></td><td>Anything outside the published clinic tables</td></tr>
+    <tr class="r-warn"><td><b>Private columns stay private</b></td><td>SSNs and billing status never appear in answers, including sneaky routes: grouping, ordering, or combined lists that leak them indirectly</td></tr>
+    <tr><td><b>No system-table snooping</b></td><td>Queries that map the database's own structure</td></tr>
+    <tr><td><b>No execution tricks</b></td><td>Commands that run code, attach files, or flip settings</td></tr>
+    <tr><td><b>Huge answers get a hint</b></td><td>Unbounded reads still run, with a suggestion to add a limit</td></tr>
+    <tr><td><b>Answer must match the question</b> (stretch)</td><td>The query must actually do what the question asked. Marked droppable without hurting the demo</td></tr>
+  </table>
+
+  <h2>3 · What the document commits us to</h2>
+  <table>
+    <tr><th>The commitment</th><th style="width:130px">Standing</th><th>The proof</th></tr>
+    <tr class="r-ok"><td>Every rule has a test, and every requirement traces to one</td><td class="good">DONE</td><td>40 automated tests; a traceability table maps each requirement to its evidence</td></tr>
+    <tr class="r-ok"><td>The gate is measured, not asserted</td><td class="good">DONE</td><td>64-case labeled set, run in one command; results published in the document and on a live metrics page</td></tr>
+    <tr class="r-ok"><td>Equivalent rewrites never change a verdict</td><td class="good">DONE</td><td>384 rewrite checks (casing, spacing, semicolons, added limits): all stable</td></tr>
+    <tr class="r-ok"><td>The user interface explains itself</td><td class="good">DONE</td><td>Four pages, plain language: ask, how it works, metrics with meaning, browsable log</td></tr>
+    <tr class="r-warn"><td>Live AI mode</td><td class="badt">NOT BUILT</td><td>Deliberately: the demo runs on a deterministic stand-in so nothing depends on an external service. The live mode is the opener for the second project</td></tr>
+    <tr class="r-warn"><td>Intent matching (does the SQL do what was asked)</td><td class="badt">STRETCH</td><td>Marked droppable by recorded decision; the demo survives without it</td></tr>
+  </table>
+
+  <h2>4 · Where this could go wrong</h2>
+  <table>
+    <tr><th style="width:52%">Scenario</th><th style="width:110px">Likelihood</th><th>What it means</th></tr>
+    <tr class="r-warn"><td>A safe question gets blocked in the demo</td><td>Low, measured</td><td>Zero false alarms on 30 safe questions so far. The test set grows with each lane, which is the guard</td></tr>
+    <tr class="r-warn"><td>The requirement document reads as machine-written</td><td>Managed</td><td>The group reviews and rewrites in our own voice before submission; the style guide for that exists</td></tr>
+    <tr class="r-info"><td>Chen announces the midterm earlier than expected</td><td>Possible</td><td>We submit early by design, so an early date costs us nothing but the review window</td></tr>
+    <tr class="r-ok"><td>One of us stalls</td><td>Contained</td><td>Every lane has a working baseline on both sides, so neither of us blocks the other</td></tr>
+    <tr class="r-warn"><td>Grader asks "why not just trust the AI?"</td><td>The demo answers it</td><td>That is the point of the project: one live block with a plain explanation beats ten slides of claims</td></tr>
+  </table>
+
+  <h2>5 · What we need from you</h2>
+  <ul>
+    <li><b>Read this</b> as the thing you are signing onto: is anything unclear, wrong, or missing?</li>
+    <li><b>Write 5+ test questions</b> a normal user might type that should be stopped or masked. They go into the automated set with your name on them.</li>
+    <li><b>Take the frontend lane</b> if the split feels right: pages, wording, first-minute experience. A working baseline exists, so you are polishing, not building from zero.</li>
+    <li><b>Pick your presentation part.</b> The natural split: one of us does the problem and live demo, the other does the requirements and measured results.</li>
+  </ul>
+
+  <footer>
+    The full formal document (every numbered requirement, the data model, the traceability table) is
+    <code>srs/SRS.html</code> / <code>srs/SRS.md</code>. The working app is at
+    <code>project/prototype/</code>. Decisions and their rejected alternatives live in <code>DECISIONS.md</code>.
+    Prepared September 12, 2026.
+  </footer>
+</div>
+</body>
+</html>

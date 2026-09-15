@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QueryGuard — requirement document (review copy)</title>
+<style>
+  body { margin: 0; background: #121418; color: #f2f0e8;
+         font: 16px/1.65 -apple-system, "Segoe UI", Roboto, Ubuntu, sans-serif; }
+  main { max-width: 860px; margin: 2.5rem auto; padding: 0 1.2rem 4rem; }
+  h1 { font-size: 1.35rem; }
+  h2 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.14em;
+       color: #a8b2bb; margin-top: 2.4rem; border-top: 1px solid #2a313a; padding-top: 1.4rem; }
+  h3 { font-size: 1.02rem; color: #9fb3c8; }
+  strong { color: #ffffff; }
+  em { color: #a8b2bb; }
+  a { color: #9fb3c8; }
+  code { background: #232a32; border: 1px solid #2a313a; border-radius: 5px;
+         padding: 0.1rem 0.4rem; font-size: 0.88em; }
+  table { border-collapse: collapse; width: 100%; margin: 0.8rem 0; font-size: 0.93rem; }
+  th, td { border: 1px solid #2a313a; padding: 0.45rem 0.6rem; text-align: left; vertical-align: top; }
+  th { background: #232a32; color: #9fb3c8; text-transform: uppercase;
+       font-size: 0.76rem; letter-spacing: 0.08em; }
+  tr:nth-child(even) td { background: rgba(255, 255, 255, 0.02); }
+  .note { background: #1b2027; border: 1px solid #2a313a; border-left: 3px solid #e8b341;
+          border-radius: 8px; padding: 0.8rem 1rem; margin: 1.5rem 0; font-size: 0.95rem; }
+  .review { background: #1b2027; border: 1px solid #2a313a; border-left: 3px solid #9fb3c8;
+            border-radius: 8px; padding: 0.9rem 1.1rem; margin: 1.6rem 0; }
+</style>
+</head>
+<body>
+<main>
+<div class="review"><strong>Review copy for Arwa.</strong> Read top to bottom (about 20 minutes). Mark anything unclear, wrong, or missing: content matters more than wording. Comment in the file, in chat, or bring points to the next call. Nothing is final until the group signs off.</div><div class="note"><strong>How to read this:</strong> Section 2.3.1 is the human summary (who wants what and why). Sections 3 and 6 are the engineering detail: one numbered requirement per safety rule, each mapped to a test. Section 8 holds the measured results.</div>
+<h1>QueryGuard - Software Requirements Specification (v1.1)</h1>
+<p><strong>Status:</strong> v1.1, submission before midterm. Group review notes fold in as they arrive; the submission is not gated on them. Written from the working system and its decision log (<code>DECISIONS.md</code> D-001..D-019); every requirement below is implemented and test-covered unless explicitly marked stretch/open.
+<strong>Structure:</strong> IEEE-830 shaped (the course-confirmed spec form); IEEE-830 was withdrawn and superseded by ISO/IEC/IEEE 29148 — section naming here follows the familiar 830 layout with 29148 terminology.
+<strong>Revision history:</strong> v0.1 draft 2026-09-10; v1.0 candidate 2026-09-12; v1.1 2026-09-15 - requirement priority ranking (section 3.6) and this history block added per the adopted IEEE 830 / 29148 yardstick (SUBMISSION_CHECKLIST item 5). Review notes fold in as they arrive; the submission is not gated on them.</p>
+<hr />
+<h2>1. Introduction</h2>
+<h3>1.1 Purpose</h3>
+<p>This SRS specifies QueryGuard, a safety gate for LLM-generated SQL, as the review artifact for Group Project 1 and the requirement source for Group Project 2 (implementation and demo).</p>
+<h3>1.2 Scope</h3>
+<p>In scope: plain-English question intake; candidate SQL generation (mock default, live LLM optional); a deterministic validation gate (9 rules, actions BLOCK / MASK / SUGGEST) operating on a parsed SQL AST; compound-statement verification per arm; sensitive-column side-channel blocking; a gate-only executor over a read-only connection; an append-only audit log; an evaluation harness (labeled corpus + metamorphic relations); a plain-language web UI.
+Out of scope (kept out so Project 2 stays feasible): live-LLM prompt-engineering quality work, user account management, multi-database support beyond SQLite, deployment beyond a single demo machine, model-side defenses.</p>
+<h3>1.3 Definitions</h3>
+<ul>
+<li><strong>Gate:</strong> the validation component that returns a verdict (PASS / BLOCK) and optional actions (MASK, SUGGEST) for a candidate query.</li>
+<li><strong>Rule:</strong> one numbered safety check applied to every candidate (FR-G01..G10). Each rule carries a plain-language name shown in the UI (<code>queryguard/explain.py</code>).</li>
+<li><strong>Verdict:</strong> the gate's decision: PASS = ran as asked; MASK = answered with private columns removed; BLOCK = stopped, nothing ran. ERROR = a query that passed the gate failed at execution; audited, nothing ran, nothing changed (see FR-03).</li>
+<li><strong>Attack class:</strong> one of six published categories: direct DML, write bypass, multi-query, read exfiltration, schema reconnaissance, semantic mismatch.</li>
+<li><strong>Audit log:</strong> the append-only record of every question and verdict; it only grows.</li>
+<li><strong>Mock mode:</strong> deterministic generator mapping prompts to canned candidates; default for development, tests, and demos (zero external dependency).</li>
+<li><strong>Metamorphic relation (MR):</strong> a semantically equivalent rewrite that must not change the verdict (Section 8.3).</li>
+</ul>
+<h3>1.4 References</h3>
+<p>Pressman, <em>Software Engineering: A Practitioner's Approach</em> (course text); Yeow et al., ICETSIS 2024 (Quiz 1 paper); <code>TECH_PLAN.md</code> (design §§1-12); <code>COMPETITION_SCAN.md</code> (LangShield/P2SQL ICSE 2025, StruQ USENIX 2025, SecAlign CCS 2025, SQLShield, NeMo Guardrails, Guardrails AI, RBAC-T2SQL benchmark arXiv 2607.22115); ISO/IEC/IEEE 29148 (SRS standard, IEEE-830 successor).</p>
+<h3>1.5 Overview</h3>
+<p>Section 2 describes the product and its users. Section 3 gives numbered functional and non-functional requirements. Sections 4-5 give the data model and interfaces. Section 6 traces every requirement to a test. Section 7 maps milestones to course dates. Section 8 reports measured evaluation results. Section 9 lists the course practices this project applies. Section 10 lists open items.</p>
+<h2>2. Overall description</h2>
+<h3>2.1 Product perspective</h3>
+<p>QueryGuard is a standalone web application with five components in one request path: Intake -&gt; Generator -&gt; Validation Gate -&gt; Executor -&gt; Audit Log. The gate is architectural, not advisory: the executor accepts connections only from the gate, and the database connection is read-only at the file level (<code>mode=ro</code>) plus <code>PRAGMA query_only</code>, so no write can succeed even if a rule were bypassed. Rules run on a normalized AST (sqlglot, SQLite dialect), never on raw substrings.</p>
+<h3>2.2 Product functions</h3>
+<p>Answer plain-English questions against a demo clinic database; show the generated SQL and its verdict; block or transform unsafe queries before execution; explain every decision in plain language; record everything; and measure itself (block rates, false-positive rate, latency, metamorphic stability) with a repeatable harness.</p>
+<h3>2.3 User classes</h3>
+<ul>
+<li><strong>End user (demo persona):</strong> asks questions in a browser; sees answers and plain-language verdict explanations; never needs to know gate internals.</li>
+<li><strong>Developer/reviewer (course staff, group):</strong> reads the audit log, metrics page, corpus reports, decisions, and this SRS.</li>
+<li><strong>Evaluator (harness/CI):</strong> runs the labeled corpus and metamorphic relations; publishes metrics artifacts.</li>
+</ul>
+<h3>2.3.1 User stories</h3>
+<table>
+<thead>
+<tr>
+<th>As a...</th>
+<th>I want to...</th>
+<th>so that...</th>
+<th>Requirements</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>demo viewer</td>
+<td>type a question and see an answer</td>
+<td>I can see the product work end to end</td>
+<td>FR-01, FR-02, FR-04, FR-U1</td>
+</tr>
+<tr>
+<td>demo viewer</td>
+<td>see every blocked query explained in plain English</td>
+<td>I trust that nothing dangerous ran</td>
+<td>FR-U1, NFR-4</td>
+</tr>
+<tr>
+<td>privacy-conscious viewer</td>
+<td>know private columns (SSN, billing status) can never appear in answers</td>
+<td>I can believe the privacy claim</td>
+<td>FR-G05, C-1</td>
+</tr>
+<tr>
+<td>compliance reviewer</td>
+<td>browse a log of every decision</td>
+<td>I can verify what ran and why, after the fact</td>
+<td>FR-A1, FR-A2</td>
+</tr>
+<tr>
+<td>evaluator</td>
+<td>run one command that tests the gate against known attacks</td>
+<td>safety claims are measured, not asserted</td>
+<td>FR-E1..FR-E4</td>
+</tr>
+</tbody>
+</table>
+<h3>2.4 Operating environment</h3>
+<p>Single-machine demo; Python + Flask server-rendered UI (Tabler design system, vendored, offline-safe, no build step); SQLite demo database; pytest + GitHub Actions CI. No cloud services required in mock mode.</p>
+<h3>2.5 Design and implementation constraints</h3>
+<ul>
+<li><strong>C-1 Read-only execution:</strong> the executor's connection is read-only at the file level and by pragma; writes cannot succeed.</li>
+<li><strong>C-2 AST rules:</strong> rules operate on a parsed, normalized AST (sqlglot), never raw substrings.</li>
+<li><strong>C-3 Mock-first:</strong> candidate generation is swappable; mock is the default (no API dependency).</li>
+<li><strong>C-4 Content separation:</strong> no shared code, naming, or claims with the group's research artifact.</li>
+<li><strong>C-5 Audit before response:</strong> every decision is persisted before the response returns.</li>
+<li><strong>C-6 Compound safety:</strong> set operations (UNION / INTERSECT / EXCEPT) are verified arm by arm; sensitive columns in GROUP BY / ORDER BY / HAVING block (D-011, D-012).
+  A query that passes the gate but fails at execution returns an error response, is audited with verdict ERROR, and changes nothing (fail closed).</li>
+</ul>
+<h3>2.6 Assumptions and dependencies</h3>
+<p>Two-person group (operator + Arwa) with named lanes; midterm date TBA (requirement document is the by-midterm deliverable, restated by Chen on Sep 3 and Sep 8); demo-scale data volumes; AI-usage policy for deliverables not yet stated on any captured course surface (open item).</p>
+<h2>3. Specific requirements</h2>
+<h3>3.1 Query flow</h3>
+<ul>
+<li><strong>FR-01 (Intake):</strong> every question enters through one endpoint (<code>POST /api/ask</code>) so each request follows one recorded path.</li>
+<li><strong>FR-02 (Generator):</strong> a candidate SQL query is produced per question by the mock generator by default; a live-LLM generator may be swapped in behind the same interface.</li>
+<li><strong>FR-03 (Gate-only executor):</strong> only gate-PASSED or gate-MASKED queries execute, and only over the read-only connection; BLOCKED queries never reach the database.</li>
+<li><strong>FR-04 (Answer assembly):</strong> every request returns <code>{answer, sql, verdict, elapsed_ms}</code>, where elapsed_ms is the full request time (generator + gate + execution), honestly labeled in the UI against the 50 ms target.</li>
+</ul>
+<h3>3.2 Validation gate (one FR per rule; each is one test case)</h3>
+<ul>
+<li><strong>FR-G01 (No destructive statements):</strong> BLOCK any INSERT, UPDATE, DELETE, DROP, ALTER, TRUNCATE, CREATE.</li>
+<li><strong>FR-G02 (One query at a time):</strong> BLOCK stacked statements.</li>
+<li><strong>FR-G03 (No hidden write commands):</strong> BLOCK write commands hidden by comments (comments stripped pre-parse; comment-joined candidates BLOCK, per the concat-form check).</li>
+<li><strong>FR-G04 (Only allowed tables):</strong> BLOCK references to tables outside the declared queryable set.</li>
+<li><strong>FR-G05 (Private columns stay private):</strong> BLOCK or MASK any statement exposing a SENSITIVE column, where exposing covers projections of any SELECT (including every arm of a compound statement) and references in GROUP BY, ORDER BY, or HAVING; MASK when non-sensitive columns remain, BLOCK when an all-sensitive projection or a side channel is present; WHERE-filtering on a sensitive column is allowed (D-002, D-011, D-012).</li>
+<li><strong>FR-G06 (No system-table snooping):</strong> BLOCK catalog queries (<code>sqlite_master</code>, <code>information_schema</code>, pragma tables, equivalents).</li>
+<li><strong>FR-G07 (No execution tricks):</strong> BLOCK PRAGMA, ATTACH, and side-effecting functions (e.g., <code>load_extension</code>).</li>
+<li><strong>FR-G09 (Huge answers get a hint):</strong> unbounded non-aggregated SELECTs PASS with a SUGGEST action offering a LIMIT (D-003: suggestion, not block, protects the false-positive target).</li>
+<li><strong>FR-G10 (Answer must match the question) [stretch]:</strong> BLOCK when declared intent and SQL shape disagree; droppable by recorded decision (D-005).</li>
+<li><strong>PARSE safety default:</strong> unparseable candidates BLOCK (D-004).</li>
+</ul>
+<h3>3.3 Audit and evaluation</h3>
+<ul>
+<li><strong>FR-A1 (Audit record):</strong> one append-only record per request: id, ts, session, question, intent, sql, verdict, rule_id, action, latency_ms, mode.</li>
+<li><strong>FR-A2 (Audit view):</strong> paginated audit browsing via <code>GET /api/audit</code> and the <code>/ui/audit</code> page.</li>
+<li><strong>FR-E1 (Corpus run):</strong> the labeled corpus (64 entries: 30 benign + 34 attack, each labeled with expected verdict and rule) runs in one command; results retrievable per run.</li>
+<li><strong>FR-E2 (Metrics report):</strong> per-class block rate, false-positive rate on the benign corpus, and latency percentiles as a JSON artifact + human-readable table.</li>
+<li><strong>FR-E3 (Regression):</strong> rule changes rerun the corpus in CI; any expected-verdict miss fails the build (D-006 verdict-level compare; D-008 MASK satisfies expected BLOCK).</li>
+<li><strong>FR-E4 (Metamorphic stability):</strong> equivalent rewrites (case, whitespace, semicolon, added LIMIT) shall not change any verdict; the harness reports violations and fails on any (Section 8.3).</li>
+</ul>
+<h3>3.4 User interface</h3>
+<ul>
+<li><strong>FR-U1 (Ask view):</strong> the user submits a question and sees the answer, the generated SQL, the verdict, and the rule's plain-language name and explanation.</li>
+<li><strong>FR-U2 (Metrics view):</strong> pass/blocked/masked counts, per-rule attack-stop chart, and latency percentiles, each labeled so a first-time viewer knows what is good or bad.</li>
+<li><strong>FR-U3 (Explain view):</strong> a "How it works" page states the three-step flow and all nine rules in plain language, so no internal id is required to understand a verdict (plain names owned by <code>queryguard/explain.py</code>).</li>
+</ul>
+<h3>3.5 Non-functional requirements</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requirement</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NFR-1</td>
+<td>Request latency (full path)</td>
+<td>p95 &lt; 50 ms, measured</td>
+</tr>
+<tr>
+<td>NFR-2</td>
+<td>False positives on the benign corpus</td>
+<td>0 at v1 (target was &lt; 10% at v0), reported openly</td>
+</tr>
+<tr>
+<td>NFR-3</td>
+<td>Demo availability</td>
+<td>all demos/tests run in mock mode, zero external API</td>
+</tr>
+<tr>
+<td>NFR-4</td>
+<td>Explainability</td>
+<td>every BLOCK/MASK/SUGGEST carries a plain-language reason</td>
+</tr>
+<tr>
+<td>NFR-5</td>
+<td>Least privilege</td>
+<td>read-only connection, no string-concatenated SQL, engine-level <code>mode=ro</code></td>
+</tr>
+<tr>
+<td>NFR-6</td>
+<td>Result bounds</td>
+<td>answers capped at 50 rows in the UI layer</td>
+</tr>
+</tbody>
+</table>
+<h3>3.6 Requirement priorities (29148 "ranked")</h3>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Requirements</th>
+<th>Basis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Essential</td>
+<td>FR-01..FR-04, FR-G01..G07, PARSE, FR-A1, FR-A2, FR-E1..E3, FR-U1..U3, NFR-2..NFR-5</td>
+<td>the safety gate, its audit, its measurement, and the demo surface; without these the product does not exist</td>
+</tr>
+<tr>
+<td>Conditional</td>
+<td>FR-G09, FR-E4, NFR-1, NFR-6</td>
+<td>real contributions with recorded decisions (D-003) or measured headroom (p95 0.57 ms vs the 50 ms target); the product holds without them</td>
+</tr>
+<tr>
+<td>Optional</td>
+<td>FR-G10</td>
+<td>stretch by recorded decision (D-005); droppable without losing the demo</td>
+</tr>
+</tbody>
+</table>
+<h2>4. Data model</h2>
+<p>Demo database (protected asset): <code>patients(id, name, dob, ssn*, diagnosis*)</code>, <code>appointments(id, patient_id, doctor_id, date, room)</code>, <code>doctors(id, name, specialty)</code>, <code>billing(id, patient_id, amount, paid*)</code>, <code>medications(id, name, manufacturer)</code>, <code>prescriptions(id, patient_id, medication_id, date, dose)</code>, <code>staff(id, name, role)</code>; <code>*</code> = SENSITIVE, masked by default (FR-G05). Audit log (canonical truth): one append-only table per FR-A1.</p>
+<h2>5. External interfaces</h2>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/api/ask</code></td>
+<td>POST</td>
+<td>question -&gt; {answer, sql, verdict, elapsed_ms}</td>
+</tr>
+<tr>
+<td><code>/api/audit</code></td>
+<td>GET</td>
+<td>paginated audit JSON</td>
+</tr>
+<tr>
+<td><code>/api/metrics</code></td>
+<td>GET</td>
+<td>pass rate, blocks by rule, latency percentiles</td>
+</tr>
+<tr>
+<td><code>/api/eval/run</code> + <code>/api/eval/results/&lt;id&gt;</code></td>
+<td>POST/GET</td>
+<td>corpus run + report</td>
+</tr>
+<tr>
+<td><code>/</code> , <code>/ui/how</code>, <code>/ui/metrics</code>, <code>/ui/audit</code></td>
+<td>GET</td>
+<td>plain-language pages (FR-U1..U3, FR-A2)</td>
+</tr>
+</tbody>
+</table>
+<h2>6. Traceability (requirement -&gt; evidence)</h2>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FR-01..FR-04</td>
+<td>TC-01..TC-05 (<code>tests/test_app.py</code>): single-path intake, generator contract, blocked-never-executed, response shape</td>
+</tr>
+<tr>
+<td>FR-G01..G09, PARSE</td>
+<td>TC-G01..TC-G09 + PARSE (<code>tests/test_rules.py</code>): one pass case + one bypass attempt per rule</td>
+</tr>
+<tr>
+<td>FR-G05 compound + side channels</td>
+<td>7 dedicated tests (<code>test_rules.py</code>, D-011/D-012) + corpus A-EXF-06..09</td>
+</tr>
+<tr>
+<td>FR-A1, FR-A2</td>
+<td>TC-06 append-only check; TC-07 pagination; <code>/ui/audit</code> render test</td>
+</tr>
+<tr>
+<td>FR-E1..E3</td>
+<td>TC-08 corpus run artifact; TC-09 CI fail-on-miss; <code>run_eval.py</code> 64/64 (Section 8)</td>
+</tr>
+<tr>
+<td>FR-E4</td>
+<td><code>tests/test_meta.py</code> + <code>scripts/run_metamorphic.py</code> (384 relations, Section 8.3)</td>
+</tr>
+<tr>
+<td>FR-U1..U3</td>
+<td>UI render tests (ask explains, metrics labels, audit page, how page)</td>
+</tr>
+<tr>
+<td>NFR-1..NFR-6</td>
+<td>Metrics report p50/p95; FPR 0 on 30 benign; <code>fetchmany(50)</code> cap</td>
+</tr>
+<tr>
+<td>40 unit/integration/UI tests + 1 execution-error fail-closed test = 41 passing.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2>7. Milestones</h2>
+<table>
+<thead>
+<tr>
+<th>Milestone</th>
+<th>Acceptance</th>
+<th>State</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M1 Proposal</td>
+<td>presented Sep 9 (+Sep 10), Canvas receipt</td>
+<td>done</td>
+</tr>
+<tr>
+<td>M2 SRS + review + submit</td>
+<td>this document; group review in DECISIONS; submit before midterm</td>
+<td>v1.0 candidate; review pending</td>
+</tr>
+<tr>
+<td>M3 Skeleton</td>
+<td>end-to-end path on 3 demo asks</td>
+<td>done (ahead of schedule)</td>
+</tr>
+<tr>
+<td>M4 Rules complete</td>
+<td>all rules with unit tests</td>
+<td>done (G-10 stretch pending)</td>
+</tr>
+<tr>
+<td>M5 Evaluation v1</td>
+<td>report in CI artifact + numbers in this SRS</td>
+<td>done (Section 8)</td>
+</tr>
+<tr>
+<td>M6 Demo</td>
+<td>scripted demo rehearsed twice, CI green</td>
+<td>before final</td>
+</tr>
+</tbody>
+</table>
+<h2>8. Measured evaluation results (2026-09-12, <code>prototype/out/report.md</code>)</h2>
+<h3>8.1 Corpus (64 entries, mock mode)</h3>
+<ul>
+<li>verdict matches: <strong>64/64</strong>; benign false-positive rate: <strong>0.0</strong>.</li>
+<li>block-or-mask rate by attack class: direct_dml <strong>100%</strong>, write_bypass <strong>100%</strong>, multi_query <strong>100%</strong>, read_exfiltration <strong>100%</strong>, schema_recon <strong>100%</strong>, semantic_mismatch <strong>100%</strong>.</li>
+<li>exact-verdict match on read_exfiltration: 55.6% — the remainder returned MASK (private columns removed), the designed outcome; the safety-relevant leak rate is 0. Reported separately so the number stays honest (D-008).</li>
+<li>latency p50/p95: <strong>0.224 / 0.569 ms</strong> (target &lt; 50 ms).</li>
+</ul>
+<h3>8.2 Tests</h3>
+<p>41 passing: per-rule pass+bypass, compound-arm and side-channel regressions, HTTP integration, UI render checks, fail-closed runtime regression (FR-03).</p>
+<h3>8.3 Metamorphic relations</h3>
+<p>384 checks (64 candidates x 6 relations): <strong>all hold</strong>. Equivalent rewrites never change a verdict.</p>
+<h2>9. Course practices applied</h2>
+<ul>
+<li><strong>User stories</strong> (XP, lecture Sep 3): Section 2.3.1, traced to requirements and tests.</li>
+<li><strong>Test-first / refactoring</strong> (XP, lecture Sep 3): the UNION defect was reproduced as a failing behavior, fixed, and pinned by regression tests; rule interpretations were refactored with the corpus as the safety net.</li>
+<li><strong>Continuous integration</strong> (lecture Sep 3 + slide 7): push-gate workflow fails the build on any test or corpus miss.</li>
+<li><strong>Security practices</strong> (lecture Aug 27): masking vs tokenization, least privilege, read-only enforcement — all demonstrated by the gate.</li>
+<li><strong>AI-era framing</strong> (lecture 1): the gate is the control layer for an AI tool writing SQL against a real schema.</li>
+</ul>
+<h2>10. Open items</h2>
+<ol>
+<li>Group review notes: operator-side conversation, folded in as received - not a submission gate.</li>
+<li>AI-usage policy for deliverables: not stated on any captured course surface.</li>
+<li>Midterm date: not yet posted; pins M2 submission.</li>
+<li>Live-LLM mode: needs the group's API choice (Project 2 opener).</li>
+<li>FR-G10 intent matching: stretch, droppable by recorded decision.</li>
+</ol>
+</main>
+</body>
+</html>

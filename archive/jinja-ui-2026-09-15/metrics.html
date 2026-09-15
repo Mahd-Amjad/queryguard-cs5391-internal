@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}QueryGuard - metrics{% endblock %}
+{% block pagetitle %}Metrics{% endblock %}
+{% block content %}
+<div class="card mb-3">
+  <div class="card-body d-flex align-items-center">
+    <span class="stat-icon text-green me-3">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 12h4l3 7 4-14 3 7h4"/>
+      </svg>
+    </span>
+    <div>
+      <div class="subheader mb-1">What this page tells you</div>
+      Every question so far was checked by the gate before it touched the database.
+      {{ blocked }} of {{ total }} requests were attack attempts, and all of them were stopped.
+      {{ masked }} answers had private columns removed. Safe questions run normally:
+      the check itself is far faster than an eye blink (target: under 50 ms).
+    </div>
+  </div>
+</div>
+
+{% set stats = [
+  ('questions asked', total, '', 'M4 5h16v10H8l-4 4z', 'text-blue'),
+  ('ran normally', passed, '', 'M9 12l2 2 4-4M12 3l7 3v5c0 4.6-2.9 8-7 10-4.1-2-7-5.4-7-10V6z', 'text-green'),
+  ('attacks stopped', blocked, '', 'M12 3l7 3v5c0 4.6-2.9 8-7 10-4.1-2-7-5.4-7-10V6zM10 10l4 4M14 10l-4 4', 'text-red'),
+  ('private data hidden', masked, '', 'M3 3l18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M8 4h9a2 2 0 0 1 2 2v9M17 17H6l-2 2V6a2 2 0 0 1 2-2', 'text-yellow'),
+  ('typical check', p50, ' ms', 'M3 12h4l3 7 4-14 3 7h4', 'text-blue'),
+  ('slowest 5%', p95, ' ms', 'M12 6v6l4 2M12 3a9 9 0 1 0 9 9', 'text-blue'),
+] %}
+<div class="row g-3 mb-3">
+  {% for label, value, unit, icon, color in stats %}
+  <div class="col-6 col-lg-2">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex align-items-center mb-2">
+          <span class="stat-icon {{ color }} me-2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="{{ icon }}"/>
+            </svg>
+          </span>
+          <div class="subheader">{{ label }}</div>
+        </div>
+        <div class="h1 mb-0 {{ color }}">{{ value }}{% if unit %}<span class="text-secondary fs-3">{{ unit }}</span>{% endif %}</div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Every decision, in order</h3>
+      </div>
+      <div class="card-body">
+        <div class="chart-box"><canvas id="timeline"></canvas></div>
+        <div class="text-secondary mt-2">Each block is one request: green ran, red was an attack
+           (stopped), amber was answered with private columns removed.
+           Hover for the detail. The full story is on the <a href="/ui/audit">audit page</a>.</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card">
+      <div class="card-header"><h3 class="card-title">Which rules stopped the attacks</h3></div>
+      <div class="card-body">
+        {% set max_n = by_rule.values()|max if by_rule else 0 %}
+        {% for rule, n in by_rule.items() %}
+        <div class="bar-row">
+          <span class="badge bg-secondary-lt">{{ rule }}</span>
+          <div class="progress progress-sm"><div class="progress-bar bg-danger" style="width: {{ ((n * 100 / max_n)|round)|int }}%"></div></div>
+          <span class="n">{{ n }}</span>
+        </div>
+        {% endfor %}
+        {% if not by_rule %}<div class="text-secondary">no attacks seen yet</div>{% endif %}
+        <div class="text-secondary mt-2">Each bar is one safety rule; longer means more attacks that rule stopped.
+           <a href="/ui/how">What each rule means</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='chart.umd.min.js') }}"></script>
+<script>
+  const series = {{ series | tojson }};
+  const vcolor = {PASS: "#43d17c", BLOCK: "#e74c3c", MASK: "#e8b341"};
+  new Chart(document.getElementById("timeline"), {
+    type: "bar",
+    data: {
+      labels: series.labels,
+      datasets: [{
+        data: series.values,
+        backgroundColor: series.verdicts.map(v => vcolor[v] || "#9fb3c8"),
+        borderRadius: 3,
+        maxBarThickness: 26,
+        categoryPercentage: 0.95
+      }]
+    },
+    options: {
+      maintainAspectRatio: false,
+      responsive: true,
+      animation: { duration: 300 },
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => series.verdicts[ctx.dataIndex] + " · " + series.questions[ctx.dataIndex] } }
+      },
+      scales: {
+        x: { display: false, grid: { display: false } },
+        y: { display: false, beginAtZero: true, grid: { display: false } }
+      }
+    }
+  });
+</script>
+{% endblock %}

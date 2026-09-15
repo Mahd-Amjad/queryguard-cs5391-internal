@@ -1,0 +1,25 @@
+name: Guard test suite
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run gate unit tests (one test per rule)
+        run: pytest tests/ -v
+
+      - name: Corpus regression (starter set must fully pass)
+        run: python scripts/run_eval.py --corpus data/corpus.jsonl --mode mock --fail-on-miss

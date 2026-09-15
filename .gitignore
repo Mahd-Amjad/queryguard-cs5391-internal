@@ -1,0 +1,10 @@
+# build artifacts / environments (regenerable)
+web/node_modules/
+web/dist/
+.venv/
+prototype/.venv/
+**/__pycache__/
+instance/
+*.pyc
+# nested vcs (history archived + preserved on GitHub shared repo)
+prototype/.git/
