@@ -41,7 +41,14 @@ it. If a line and reality disagree, fix the line the same day (owner: whichever 
 | presenton | deck GENERATION if needed (decks usually hand-built via python-pptx scripts) | see docs/DECK docs |
 | `.meta/scripts/research.py` (workspace) | gh/web research pass (tool-mandatory RESEARCH step) | `research.py gh "<query>"` |
 | `.meta/scripts/audit_scan.py` (workspace) | duplicate/corrupt/register audit | part of grad-doctor |
-| `scripts/sync-repo.sh` (project/) | push prototype repo to GitHub (only push path) | run from project/ |
+| `scripts/repo-sync.sh` (project/) | THE one push tool: `internal` = full tree -> queryguard-cs5391-internal; `shared` = whitelist subset -> queryguard-cs5391; `both` = both. Whitelist inline in the script | run from project/ |
+| `Slack_chat.txt` (Graduate root) | the Arwa Slack chain outbox - append messages, never draft in chat | one chain file per external party |
+
+## Communication
+
+- **To the operator:** the output contract in Business CORE_RULES section 2 (answer first, max-5 lists, no recap) + session tables max 5 rows.
+- **To external parties (Arwa, professors):** the Legal-drafts shape - their question as the header, the answer up front, numbered facts, plain words, one next step. Messages are appended to the chain file for that party (Slack_chat.txt for Arwa), never drafted in chat.
+- **Governance references:** Zapply Discord protocol (Business ssot/DISCORD_SERVER_PROTOCOL.md) = server access and incident governance only, not message writing.
 | playwright chromium | SPA browser tests (starter config; install once if missing) | `pnpm test:browser:install` |
 
 ## Canonical skills (load when the task matches)

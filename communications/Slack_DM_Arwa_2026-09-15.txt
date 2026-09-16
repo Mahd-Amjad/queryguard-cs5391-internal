@@ -1,0 +1,136 @@
+arwa arafa
+Messages
+Add canvas
+Files & links
+CanvasListFolder
+CE
+arwa arafa
+This conversation is just between @arwa arafa and you. Check out their profile to learn more about them.
+M. Mahd Amjad
+  4:23 PM
+accepted arwa arafa’s invitation.
+M. Mahd Amjad
+  6:23 PM
+
+    Sorry i had not replied before. I was sick over the last several days.
+
+6:23
+2. Here are the proejct details i came up with:
+Project idea for 5391: a web app where you ask questions in plain English, an LLM converts them to SQL, and a validation layer checks every query before it runs thus blocking destructive statements and injection patterns, logging every decision. It covers frontend, backend, database, and security, and demos well since you can watch a bad query get blocked in real time.Why this one: LLM-to-database tools are already in production and already have CVEs. Existing defenses either require retraining the model or are heavyweight generic guardrails that aren't SQL-aware. A transparent, SQL-specific check layer that works with any LLM fills that gap, and it's testable, so the evaluation work for the course is real rather than made up
+6:24
+3. I went with this since i have experience in Cybersecurity and Databases.
+6:26
+4. Regarding the team member, i had not added Grace before for two reasons:
+First was that she has a business background and probably won't be able to contribute properly. I've worked with business students before and it can be difficult.
+Second was that i wanted us to add people who either of us knew so we wouldn't risk any issues.
+6:27
+5. I'll share details in a few days regarding this. Please tell me if you have any thoughts with regards to what i said
+arwa arafa
+  7:23 PM
+Hi , I also had an idea I might share with you but I see the Dr will more likely prefer your idea.
+arwa arafa
+  7:37 PM
+I thought maybe business students can be good at presenting the idea and do a demo video. I don't know much about her/his background  (edited) 
+arwa arafa
+  2:15 PM
+Hi Amjad
+would you like to arrange a meeting this weekend maybe
+M. Mahd Amjad
+  3:50 PM
+Hi,
+Sure, we can schedule a meeting this weekend.
+3:51
+I did prepare a draft for the project presentation but will go over it and refine it:
+PowerPoint Presentation 
+SE_Initial_Presentation.pptx
+PowerPoint Presentation
+M. Mahd Amjad
+  10:38 PM
+What time would you recommend?
+arwa arafa
+  2:29 PM
+Hi Amjad, So sorry did not see the messages I was about to ask when is it suitable for you to meet.
+2:30
+how about tonight or tomorrow morning
+M. Mahd Amjad
+  3:31 PM
+Hi, tomorrow morning would be good. How about 12:00 pm?
+arwa arafa
+  3:33 PM
+Great, we will discuss the requirements and start working on them right?
+M. Mahd Amjad
+  10:11 PM
+Yeah. I have done an early draft that we can go over, too (edited) 
+arwa arafa
+  12:00 PM
+Hi , should I send a link now ?
+M. Mahd Amjad
+  12:00 PM
+Yeah, sure
+arwa arafa
+  12:02 PM
+meet.google.com/htu-gjrs-qpb
+Meet
+Real-time meetings by Google. Using your browser, share your video, desktop, and presentations with teammates and customers.meet.google.commeet.google.com
+M. Mahd Amjad
+  12:03 PM
+- Topic: QueryGuard. An AI writes SQL from your question. A safety gate checks it first.
+- Stack: Python + Flask + SQLite. Free choice was allowed; nothing to install on your side.
+- Three outcomes for every query: PASS (runs), BLOCK (stopped, with a reason), MASK (answered with private columns removed).
+- Nine safety rules. Each has at least one automated test.
+12:08
+Demo:1. "How many appointments are scheduled in March?" ? answer, with the query shown.
+2. "Delete all billing records for unpaid patients." ? blocked, reason shown, nothing touched.
+3. "Show the full patient record including SSN." ? answered with the SSN removed, and the app says so.
+4. Metrics page: attacks stopped, no false alarms, check times well under a blink.
+5. Audit page: every decision ever made, browsable, never edited.
+12:09
+dash.png 
+dash.png
+12:14
+PowerPoint Presentation 
+PROPOSAL_DECK_EDITORIAL_DARK.pptx
+PowerPoint Presentation
+Only visible to you
+Slackbot
+  12:17 PM
+That looks like a GitHub link. Would you like to install the GitHub app from the Slack Marketplace?
+GitHub
+Bring your code to the conversations you care about with the GitHub and Slack app. With two of your most important workspaces connected, you’ll get updates about what’s happening on GitHub—without leaving Slack.
+Learn more
+M. Mahd Amjad
+  12:17 PM
+github.com/Mahd-Amjad/queryguard-cs5391
+arwa arafa
+  12:22 PM
+arwa ragheb ali arafeh
+12:23
+A-RR3
+M. Mahd Amjad
+  12:26 PM
+SRS_REVIEW.html 
+SRS_REVIEW.html
+HTML
+M. Mahd Amjad
+  12:37 PM
+
+    SRS is present in HTML. will upload to Github
+    Will also include the story, Software practices followed, etc
+    Presentation split is due on Tuesday. You can take first 4 slides and i'll take the last 4 slides.
+
+12:40
+invite.png 
+invite.png
+ALT
+arwa arafa
+  1:00 PM
+Hey Amjad . were you able to run the code on your end ? and did you use codex for the coding . I see the front end is under static in the first commit so is it a ready to run  code? Sorry if that is a bit confusing. Also I wasn't able to find the DB in the repo (edited) 
+M. Mahd Amjad
+  2:31 PM
+Yeah it runs, it's ready to run for anyone. Clone the repo, then: python3 -m venv .venv
+  .venv/bin/pip install -r requirements.txt
+  .venv/bin/python -m queryguard.appIt opens on localhost:5055, which you can open in browser. The demo database is built automatically on first run, no API keys, no setup beyond that.Yes, i did use AI for the project work.As for the fronend, static/ is only the stylesheets. The app itself is Flask
+(Python), the pages live in templates/.
+arwa arafa
+  3:02 PM
+Hello Amjad , I see the new commits, did you add the frontend src files already ?
