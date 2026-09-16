@@ -138,10 +138,10 @@ label(s, "User stories · Arwa")
 box(s, Inches(0.7), Inches(0.95), Inches(11.9), Inches(0.7),
     "Who wants what, and why", 24, INK, bold=True)
 stories = [
-    ("A demo viewer", "asks a question and sees an answer", "sees the product work end to end"),
-    ("A privacy-conscious viewer", "knows SSNs can never appear in answers", "believes the privacy claim"),
-    ("A compliance reviewer", "browses a log of every decision", "can verify what ran and why, later"),
-    ("An evaluator", "runs one command against known attacks", "safety is measured, not asserted"),
+    ("A demo viewer", "to ask a question and see an answer", "the product works end to end"),
+    ("A privacy-conscious viewer", "to know SSNs can never appear in answers", "the privacy claim is believed"),
+    ("A compliance reviewer", "to browse a log of every decision", "what ran and why is verifiable later"),
+    ("An evaluator", "to run one command against known attacks", "safety is measured, not asserted"),
 ]
 for i, (who, want, why) in enumerate(stories):
     y = Inches(1.9 + i * 1.05)
