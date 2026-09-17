@@ -15,6 +15,7 @@ case "${1:-check}" in
     check)
         .venv/bin/python -m pytest tests/ -q
         .venv/bin/python scripts/run_eval.py --corpus data/corpus.jsonl --fail-on-miss
+        .venv/bin/python scripts/check_counts.py
         echo "ALL CHECKS PASSED"
         ;;
     serve)

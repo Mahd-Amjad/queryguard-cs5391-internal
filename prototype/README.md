@@ -32,6 +32,24 @@ The story of the project, the course practices it applies, and the measured resu
 | `/metrics` | Whether the gate is working: attacks stopped, private data hidden, check times |
 | `/audit` | Every decision ever made, browsable, append-only |
 
+## Frontend (web/)
+
+React 19 + TypeScript + Vite + shadcn/ui + Tailwind + recharts. Flask serves the built SPA
+same-origin from `web/dist`.
+
+```bash
+cd web
+pnpm install
+pnpm build      # writes web/dist, which Flask serves
+pnpm dev        # dev server, proxies /api to Flask (run ./qg.sh serve alongside)
+pnpm test       # vitest + testing-library
+```
+
+Frontend work lives in `web/src/features/` (ask, how, metrics, audit) and `web/src/components/ui/`
+(the shadcn library - standard structure, so upstream shadcn docs apply directly). Rule and
+verdict wording is not hardcoded: it comes from the API (`/api/explain`, `/api/meta`) and is
+edited in `queryguard/explain.py`.
+
 ## Structure
 
 ```
@@ -57,3 +75,4 @@ tests/                    per-rule pass+bypass tests + HTTP integration tests
   HAVING block (D-011, D-012).
 - Mock mode is the default; demos never need an API key (C-3).
 - Every decision is in the audit log before the response returns (C-5).
+- The frontend talks to Flask only - never to SQLite or the filesystem directly (same-origin API).

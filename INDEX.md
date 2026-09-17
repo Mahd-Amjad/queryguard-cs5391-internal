@@ -42,8 +42,9 @@ it. If a line and reality disagree, fix the line the same day (owner: whichever 
 
 | Tool | Use for | Command |
 |---|---|---|
-| officecli | docx/xlsx/pptx create + edit (canonical office pipeline; markdown element = md -> docx) | `officecli help docx` |
+| officecli | docx/xlsx/pptx create + edit (canonical office pipeline; markdown element = md -> docx). Docx recipe: add markdown into a COPY of the existing styled docx - a blank `create` has no heading styles | `officecli help docx` |
 | `scripts/md_to_html.py` (in prototype/) | SRS md -> branded html + repo mirror (the mirror is required: the shared repo ships `docs/` to readers with no workspace access) | run from prototype after any SRS edit |
+| `scripts/check_counts.py` (in prototype/) | truth-pass automation: stated test counts consistent across canonical files + no stale rule-count language | runs inside `qg.sh check` |
 | presenton | deck GENERATION if needed (decks usually hand-built via python-pptx scripts) | see docs/DECK docs |
 | `.meta/scripts/research.py` (workspace) | gh/web research pass (tool-mandatory RESEARCH step) | `research.py gh "<query>"` |
 | `.meta/scripts/audit_scan.py` (workspace) | duplicate/corrupt/register audit | part of grad-doctor |

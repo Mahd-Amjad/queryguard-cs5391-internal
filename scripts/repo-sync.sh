@@ -41,11 +41,16 @@ converge_shared() {
     [ -z "$entry" ] && continue
     case "$entry" in \#*) continue ;; esac
     src="$PROJECT/prototype/$entry"
-    if [ -e "$src" ]; then
-      mkdir -p "$STAGE_SHARED/$entry"
-      cp -r "$src/." "$STAGE_SHARED/$entry/" 2>/dev/null || cp -r "$src" "$STAGE_SHARED/$entry"
-    else
+    if [ ! -e "$src" ]; then
       echo "WHITELIST-MISS: $entry" >&2
+      continue
+    fi
+    if [ -f "$src" ]; then
+      mkdir -p "$STAGE_SHARED/$(dirname "$entry")"
+      cp "$src" "$STAGE_SHARED/$entry"
+    else
+      mkdir -p "$STAGE_SHARED/$entry"
+      cp -r "$src/." "$STAGE_SHARED/$entry/"
     fi
   done <<'WL'
 README.md
@@ -61,6 +66,7 @@ docs/SRS.md
 docs/SRS.html
 docs/SRS.docx
 docs/story.md
+docs/screenshots/
 web/src/
 web/public/
 web/index.html
@@ -90,8 +96,11 @@ push_shared() {
 }
 
 case "${1:-help}" in
-  internal) push_internal ;;
-  shared)   push_shared ;;
-  both)     push_internal; push_shared ;;
-  *) echo "usage: repo-sync.sh [internal|shared|both]"; exit 1 ;;
+  internal)   push_internal ;;
+  shared)     push_shared ;;
+  shared-dry) converge_shared
+              echo "shared-dry: staged changes (nothing committed or pushed):"
+              git -C "$STAGE_SHARED" diff --cached --stat | tail -20 ;;
+  both)       push_internal; push_shared ;;
+  *) echo "usage: repo-sync.sh [internal|shared|shared-dry|both]"; exit 1 ;;
 esac

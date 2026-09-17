@@ -72,7 +72,8 @@ with evidence, not claimed.
 
 Founded on the SM62 finds: three canonical files stated three different test counts (39 / 40 / 41),
 TECH_PLAN listed resolved decisions as "the only open items", and a dropped rehearsal stayed
-"pending" in three surfaces. Mechanical checks before declaring a session done:
+"pending" in three surfaces. Mechanical checks before declaring a session done (the counts and
+stale-language legs run automatically inside `qg.sh check` via `scripts/check_counts.py`):
 
 - [ ] Stated test counts equal the live suite: run `pytest -q`, then
       `grep -n "passing" README.md TECH_PLAN.md srs/SRS.md` - every stated count matches the run.
