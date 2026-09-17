@@ -1,6 +1,6 @@
 # QueryGuard - Software Requirements Specification (v1.1)
 
-**Status:** v1.1, submission before midterm. Group review notes fold in as they arrive; the submission is not gated on them. Written from the working system and its decision log (`DECISIONS.md` D-001..D-019); every requirement below is implemented and test-covered unless explicitly marked stretch/open.
+**Status:** v1.1, submission before midterm. Group review notes fold in as they arrive; the submission is not gated on them. Written from the working system and its decision log (`DECISIONS.md` D-001..D-023); every requirement below is implemented and test-covered unless explicitly marked stretch/open.
 **Structure:** IEEE-830 shaped (the course-confirmed spec form); IEEE-830 was withdrawn and superseded by ISO/IEC/IEEE 29148: section naming here follows the familiar 830 layout with 29148 terminology.
 **Revision history:** v0.1 draft 2026-09-10; v1.0 candidate 2026-09-12; v1.1 2026-09-15 - requirement priority ranking (section 3.6) and this history block added per the adopted IEEE 830 / 29148 yardstick (SUBMISSION_CHECKLIST item 5). Review notes fold in as they arrive; the submission is not gated on them.
 
@@ -89,7 +89,7 @@ Two-person group (Mahd + Arwa) with named lanes; midterm date TBA (requirement d
 
 ### 3.3 Audit and evaluation
 - **FR-A1 (Audit record):** one append-only record per request: id, ts, session, question, intent, sql, verdict, rule_id, action, latency_ms, mode.
-- **FR-A2 (Audit view):** paginated audit browsing via `GET /api/audit` and the `/ui/audit` page.
+- **FR-A2 (Audit view):** paginated audit browsing via `GET /api/audit` and the `/audit` page.
 - **FR-E1 (Corpus run):** the labeled corpus (64 entries: 30 benign + 34 attack, each labeled with expected verdict and rule) runs in one command; results retrievable per run.
 - **FR-E2 (Metrics report):** per-class block rate, false-positive rate on the benign corpus, and latency percentiles as a JSON artifact + human-readable table.
 - **FR-E3 (Regression):** rule changes rerun the corpus in CI; any expected-verdict miss fails the build (D-006 verdict-level compare; D-008 MASK satisfies expected BLOCK).
@@ -128,7 +128,7 @@ Demo database (protected asset): `patients(id, name, dob, ssn*, diagnosis*)`, `a
 | `/api/audit` | GET | paginated audit JSON |
 | `/api/metrics` | GET | pass rate, blocks by rule, latency percentiles |
 | `/api/eval/run` + `/api/eval/results/<id>` | POST/GET | corpus run + report |
-| `/` , `/ui/how`, `/ui/metrics`, `/ui/audit` | GET | plain-language pages (FR-U1..U3, FR-A2) |
+| `/` , `/how`, `/metrics`, `/audit` | GET | plain-language pages (FR-U1..U3, FR-A2) |
 
 ## 6. Traceability (requirement -> evidence)
 | Requirement | Evidence |
@@ -136,12 +136,12 @@ Demo database (protected asset): `patients(id, name, dob, ssn*, diagnosis*)`, `a
 | FR-01..FR-04 | TC-01..TC-05 (`tests/test_app.py`): single-path intake, generator contract, blocked-never-executed, response shape |
 | FR-G01..G09, PARSE | TC-G01..TC-G09 + PARSE (`tests/test_rules.py`): one pass case + one bypass attempt per rule |
 | FR-G05 compound + side channels | 7 dedicated tests (`test_rules.py`, D-011/D-012) + corpus A-EXF-06..09 |
-| FR-A1, FR-A2 | TC-06 append-only check; TC-07 pagination; `/ui/audit` render test |
+| FR-A1, FR-A2 | `tests/test_app.py`: append-only check, audit pagination; audit view served by the SPA (D-023) |
 | FR-E1..E3 | TC-08 corpus run artifact; TC-09 CI fail-on-miss; `run_eval.py` 64/64 (Section 8) |
 | FR-E4 | `tests/test_meta.py` + `scripts/run_metamorphic.py` (384 relations, Section 8.3) |
-| FR-U1..U3 | UI render tests (ask explains, metrics labels, audit page, how page) |
+| FR-U1..U3 | 16 frontend component tests (vitest/RTL, `web/src`); SPA-serving integration in `test_app.py` (D-023) |
 | NFR-1..NFR-6 | Metrics report p50/p95; FPR 0 on 30 benign; `fetchmany(50)` cap |
-40 unit/integration/UI tests + 1 execution-error fail-closed test = 41 passing.
+40 backend tests passing (re-verified 2026-09-16 after the D-023 cutover): 28 rule tests (per-rule pass+bypass, compound-arm and side-channel regressions), 11 API/SPA-serving integration tests incl. the fail-closed runtime regression (FR-03), 1 metamorphic harness test; plus the 16 frontend component tests above.
 
 ## 7. Milestones
 | Milestone | Acceptance | State |
@@ -160,7 +160,7 @@ Demo database (protected asset): `patients(id, name, dob, ssn*, diagnosis*)`, `a
 - exact-verdict match on read_exfiltration: 55.6%: the remainder returned MASK (private columns removed), the designed outcome; the safety-relevant leak rate is 0. Reported separately so the number stays honest (D-008).
 - latency p50/p95: **0.224 / 0.569 ms** (target < 50 ms).
 ### 8.2 Tests
-41 passing: per-rule pass+bypass, compound-arm and side-channel regressions, HTTP integration, UI render checks, fail-closed runtime regression (FR-03).
+40 backend tests passing (re-verified 2026-09-16 after the D-023 cutover): per-rule pass+bypass, compound-arm and side-channel regressions, HTTP + SPA-serving integration, fail-closed runtime regression (FR-03). 16 further frontend component tests (vitest/RTL).
 ### 8.3 Metamorphic relations
 384 checks (64 candidates x 6 relations): **all hold**. Equivalent rewrites never change a verdict.
 

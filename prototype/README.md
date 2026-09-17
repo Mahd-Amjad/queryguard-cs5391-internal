@@ -8,7 +8,7 @@ gate must do). Design and decision history live with the team; this README cover
 ```bash
 python3 -m venv --system-site-packages .venv
 .venv/bin/pip install -r requirements.txt
-.venv/bin/pytest tests/ -v                      # 41 tests: rules + integration + UI + metamorphic + error path
+.venv/bin/pytest tests/ -v                      # 40 tests: rules + integration + SPA serving + metamorphic + error path
 .venv/bin/python scripts/run_eval.py --fail-on-miss   # 64-entry corpus regression
 .venv/bin/python scripts/run_metamorphic.py     # 384 rewrite-stability checks
 .venv/bin/python -m queryguard.app              # serve on :5055
@@ -28,9 +28,9 @@ The story of the project, the course practices it applies, and the measured resu
 | Route | What a viewer gets |
 |---|---|
 | `/` | Ask a question; see the answer, the SQL, and the verdict explained in plain words |
-| `/ui/how` | The three-step story and the nine safety rules in plain language |
-| `/ui/metrics` | Whether the gate is working: attacks stopped, private data hidden, check times |
-| `/ui/audit` | Every decision ever made, browsable, append-only |
+| `/how` | The three-step story and the safety rules in plain language |
+| `/metrics` | Whether the gate is working: attacks stopped, private data hidden, check times |
+| `/audit` | Every decision ever made, browsable, append-only |
 
 ## Structure
 

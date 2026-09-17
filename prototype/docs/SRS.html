@@ -32,7 +32,7 @@
 <main>
 <div class="review"><strong>Review copy for Arwa.</strong> Read top to bottom (about 20 minutes). Mark anything unclear, wrong, or missing: content matters more than wording. Comment in the file, in chat, or bring points to the next call. Nothing is final until the group signs off.</div><div class="note"><strong>How to read this:</strong> Section 2.3.1 is the human summary (who wants what and why). Sections 3 and 6 are the engineering detail: one numbered requirement per safety rule, each mapped to a test. Section 8 holds the measured results.</div>
 <h1>QueryGuard - Software Requirements Specification (v1.1)</h1>
-<p><strong>Status:</strong> v1.1, submission before midterm. Group review notes fold in as they arrive; the submission is not gated on them. Written from the working system and its decision log (<code>DECISIONS.md</code> D-001..D-019); every requirement below is implemented and test-covered unless explicitly marked stretch/open.
+<p><strong>Status:</strong> v1.1, submission before midterm. Group review notes fold in as they arrive; the submission is not gated on them. Written from the working system and its decision log (<code>DECISIONS.md</code> D-001..D-023); every requirement below is implemented and test-covered unless explicitly marked stretch/open.
 <strong>Structure:</strong> IEEE-830 shaped (the course-confirmed spec form); IEEE-830 was withdrawn and superseded by ISO/IEC/IEEE 29148: section naming here follows the familiar 830 layout with 29148 terminology.
 <strong>Revision history:</strong> v0.1 draft 2026-09-10; v1.0 candidate 2026-09-12; v1.1 2026-09-15 - requirement priority ranking (section 3.6) and this history block added per the adopted IEEE 830 / 29148 yardstick (SUBMISSION_CHECKLIST item 5). Review notes fold in as they arrive; the submission is not gated on them.</p>
 <hr />
@@ -148,7 +148,7 @@ Out of scope (kept out so Project 2 stays feasible): live-LLM prompt-engineering
 <h3>3.3 Audit and evaluation</h3>
 <ul>
 <li><strong>FR-A1 (Audit record):</strong> one append-only record per request: id, ts, session, question, intent, sql, verdict, rule_id, action, latency_ms, mode.</li>
-<li><strong>FR-A2 (Audit view):</strong> paginated audit browsing via <code>GET /api/audit</code> and the <code>/ui/audit</code> page.</li>
+<li><strong>FR-A2 (Audit view):</strong> paginated audit browsing via <code>GET /api/audit</code> and the <code>/audit</code> page.</li>
 <li><strong>FR-E1 (Corpus run):</strong> the labeled corpus (64 entries: 30 benign + 34 attack, each labeled with expected verdict and rule) runs in one command; results retrievable per run.</li>
 <li><strong>FR-E2 (Metrics report):</strong> per-class block rate, false-positive rate on the benign corpus, and latency percentiles as a JSON artifact + human-readable table.</li>
 <li><strong>FR-E3 (Regression):</strong> rule changes rerun the corpus in CI; any expected-verdict miss fails the build (D-006 verdict-level compare; D-008 MASK satisfies expected BLOCK).</li>
@@ -262,7 +262,7 @@ Out of scope (kept out so Project 2 stays feasible): live-LLM prompt-engineering
 <td>corpus run + report</td>
 </tr>
 <tr>
-<td><code>/</code> , <code>/ui/how</code>, <code>/ui/metrics</code>, <code>/ui/audit</code></td>
+<td><code>/</code> , <code>/how</code>, <code>/metrics</code>, <code>/audit</code></td>
 <td>GET</td>
 <td>plain-language pages (FR-U1..U3, FR-A2)</td>
 </tr>
@@ -291,7 +291,7 @@ Out of scope (kept out so Project 2 stays feasible): live-LLM prompt-engineering
 </tr>
 <tr>
 <td>FR-A1, FR-A2</td>
-<td>TC-06 append-only check; TC-07 pagination; <code>/ui/audit</code> render test</td>
+<td><code>tests/test_app.py</code>: append-only check, audit pagination; audit view served by the SPA (D-023)</td>
 </tr>
 <tr>
 <td>FR-E1..E3</td>
@@ -303,14 +303,14 @@ Out of scope (kept out so Project 2 stays feasible): live-LLM prompt-engineering
 </tr>
 <tr>
 <td>FR-U1..U3</td>
-<td>UI render tests (ask explains, metrics labels, audit page, how page)</td>
+<td>16 frontend component tests (vitest/RTL, <code>web/src</code>); SPA-serving integration in <code>test_app.py</code> (D-023)</td>
 </tr>
 <tr>
 <td>NFR-1..NFR-6</td>
 <td>Metrics report p50/p95; FPR 0 on 30 benign; <code>fetchmany(50)</code> cap</td>
 </tr>
 <tr>
-<td>40 unit/integration/UI tests + 1 execution-error fail-closed test = 41 passing.</td>
+<td>40 backend tests passing (re-verified 2026-09-16 after the D-023 cutover): 28 rule tests (per-rule pass+bypass, compound-arm and side-channel regressions), 11 API/SPA-serving integration tests incl. the fail-closed runtime regression (FR-03), 1 metamorphic harness test; plus the 16 frontend component tests above.</td>
 <td></td>
 </tr>
 </tbody>
@@ -366,7 +366,7 @@ Out of scope (kept out so Project 2 stays feasible): live-LLM prompt-engineering
 <li>latency p50/p95: <strong>0.224 / 0.569 ms</strong> (target &lt; 50 ms).</li>
 </ul>
 <h3>8.2 Tests</h3>
-<p>41 passing: per-rule pass+bypass, compound-arm and side-channel regressions, HTTP integration, UI render checks, fail-closed runtime regression (FR-03).</p>
+<p>40 backend tests passing (re-verified 2026-09-16 after the D-023 cutover): per-rule pass+bypass, compound-arm and side-channel regressions, HTTP + SPA-serving integration, fail-closed runtime regression (FR-03). 16 further frontend component tests (vitest/RTL).</p>
 <h3>8.3 Metamorphic relations</h3>
 <p>384 checks (64 candidates x 6 relations): <strong>all hold</strong>. Equivalent rewrites never change a verdict.</p>
 <h2>9. Course practices applied</h2>

@@ -82,7 +82,7 @@ Every rule = one numbered SRS requirement = one test case. G-05 (MASK) and G-09 
 
 ## 7. Milestones and acceptance
 
-Superseded 2026-09-15 (D-019): the live milestone table is `srs/SRS.md` section 7 (single home - this section was the duplicate). State: M1 proposal presented Sep 9; M2 SRS v1.0 candidate in group review; M3-M5 built and measured (SRS section 8: 41 tests, 64/64 corpus, 384 metamorphic checks); M6 demo rides the Sep 16 presentation. Original table: `archive/TECH_PLAN_superseded_2026-09-15.md`.
+Superseded 2026-09-15 (D-019): the live milestone table is `srs/SRS.md` section 7 (single home - this section was the duplicate). State: M1 proposal presented Sep 9; M2 SRS v1.0 candidate in group review; M3-M5 built and measured (SRS section 8: 40 tests re-verified 09-16 post-cutover, 64/64 corpus, 384 metamorphic checks); M6 demo rides the Sep 16 presentation. Original table: `archive/TECH_PLAN_superseded_2026-09-15.md`.
 
 ## 8. Demonstration script (draft)
 
@@ -244,10 +244,8 @@ check). `dist/` gitignored.
 
 Phase 2 is done when ALL hold: (1) four views at functional parity with the current app;
 (2) stranger test passes at 1440x900 in BOTH themes (no empty-answer pages, no test debris,
-no dev strings); (3) frontend tests + tsc + eslint green locally and in CI; (4) Python suite
-41/41 with render tests retired by the same commit; (5) one-command demo start works offline;
-(6) docs updated (README run instructions, SRS section 2.4 operating environment - currently
-naming Tabler, D-entry, TECH_PLAN this section marked shipped).
+no dev strings); (3) frontend tests + tsc + eslint green locally and in CI; (4) Python suite green with render tests retired by the same commit (40/40 measured 2026-09-16); (5) one-command demo start works offline;
+(6) docs updated - DONE: SRS 2.4 names the React SPA; README run instructions + module map current (09-16); D-entry = D-023; this section marked shipped.
 
 ## 16.9 Multi-perspective findings (SM62 brainstorm; each = finding -> disposition)
 
@@ -286,13 +284,13 @@ naming Tabler, D-entry, TECH_PLAN this section marked shipped).
   program, accessibility program beyond the Radix baseline, Figma-style design step, a second
   (marketing) site.
 
-## 16.10 Open rulings (the Phase 1 gate)
+## 16.10 Rulings (Phase 1 gate: items 1-4 resolved at cutover, D-023; item 5 open)
 
-1. Stack: Vite + React + shadcn (recommended) vs Next.js 16 variant.
-2. Scaffold: adapt satnaing/shadcn-admin as reference (recommended) vs fresh create.
-3. Location `prototype/web/` (assumed fine).
-4. Cutover plan 16.8 (assumed fine).
-5. Deck palette divergence: dark deck vs light app - present as-is tomorrow, re-skin later?
+1. Stack: Vite + React + shadcn - RESOLVED (D-023, Vite variant shipped 09-15).
+2. Scaffold: adapt satnaing/shadcn-admin - RESOLVED (D-023, adapted).
+3. Location `prototype/web/` - CONFIRMED (shipped there).
+4. Cutover plan 16.8 - EXECUTED 09-15 (live-verified record in D-023).
+5. Deck palette divergence: dark deck vs light app - OPEN (operator ruling whenever; present as-is).
 
 ## 16.10.1 Design-language study (references, not templates)
 

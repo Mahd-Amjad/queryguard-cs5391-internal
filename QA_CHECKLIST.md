@@ -12,8 +12,9 @@ with evidence, not claimed.
 - [ ] Every number says whether it is good or bad (or links to the context that says it)
 - [ ] Empty states written ("no attacks seen yet"), never a blank panel
 - [ ] Screenshots of EVERY page at demo resolution (1440x900, full page), compared
-      SIDE BY SIDE against the reference kit's own demo screenshots (Tabler preview
-      pages). "Looked at" by the same assistant eyes that missed the defects is not
+      SIDE BY SIDE against the adopted reference kit's own demo/screenshots (currently
+      satnaing/shadcn-admin; the named reference changes when the adopted kit does).
+      "Looked at" by the same assistant eyes that missed the defects is not
       verification: the comparison is against the reference, and the operator is the
       final arbiter of presentability (09-15 standing rule).
 - [ ] Stranger test: a page where every answer is one row, or where an audit log
