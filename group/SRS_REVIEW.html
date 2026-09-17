@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Review copy of the QueryGuard requirement document for Arwa: what we are building, the nine safety rules, measured results, and what we need from her before submission.">
+<meta name="description" content="Review copy of the QueryGuard requirement document for Arwa: what we are building, the safety rules, measured results, and what we need from her before submission.">
 <title>What are we building, and does the plan hold up? · QueryGuard requirement document</title>
 <style>
   :root { --ink:#dbdee1; --sub:#c7ccd1; --line:#3a3c44; --accent:#f2f3f5; --info:#4aa0ad; --bad:#dd6a6c; --ok:#74c79a; --warn:#ddd08a; --bg:#121316; --card:#1b1d21; --panel:#24262b; --title:#e5913c; --title2:#f2f3f5; }
@@ -56,7 +56,7 @@
 
   <div class="verdict">
     <b>Summary</b>
-    The requirement document is written and the system it describes already exists and works. The shape: a user asks a question, an AI drafts a database query, and a deterministic gate checks that query against nine safety rules before it runs. Dangerous queries are blocked with an explanation, private columns like SSNs are removed from answers, and every decision is logged in a tamper-evident style record anyone can inspect afterward. The measured results on our 64-case test set are strong: every attack stopped, zero false alarms, checks taking well under a millisecond. The honest thin spots: the live AI mode is not built yet (the demo runs on a deterministic stand-in, by design), and one advanced rule (does the query match what the user actually asked) is marked stretch and can be dropped without hurting the demo.
+    The requirement document is written and the system it describes already exists and works. The shape: a user asks a question, an AI drafts a database query, and a deterministic gate checks that query against a fixed set of safety rules (eight enforced, one stretch) before it runs. Dangerous queries are blocked with an explanation, private columns like SSNs are removed from answers, and every decision is logged in a tamper-evident style record anyone can inspect afterward. The measured results on our 64-case test set are strong: every attack stopped, zero false alarms, checks taking well under a millisecond. The honest thin spots: the live AI mode is not built yet (the demo runs on a deterministic stand-in, by design), and one advanced rule (does the query match what the user actually asked) is marked stretch and can be dropped without hurting the demo.
   </div>
 
   <h2>1 · The product in one path</h2>
@@ -65,12 +65,12 @@
     <tr><th>Step</th><th>What happens</th><th>Why it matters</th></tr>
     <tr class="r-info"><td><b>1. Intake</b></td><td>The question enters through one door, so every request is recorded the same way</td><td>No side doors means no unlogged decisions</td></tr>
     <tr class="r-info"><td><b>2. Draft</b></td><td>The AI writes the SQL query that would answer the question</td><td>This is the powerful, risky part: the AI's output is never trusted directly</td></tr>
-    <tr class="r-ok"><td><b>3. The gate</b></td><td>Nine safety rules run on the parsed query. PASS, BLOCK, or MASK (private columns removed)</td><td>This is the project. Every rule is a numbered requirement with its own test</td></tr>
+    <tr class="r-ok"><td><b>3. The gate</b></td><td>A fixed set of safety rules runs on the parsed query. PASS, BLOCK, or MASK (private columns removed)</td><td>This is the project. Every rule is a numbered requirement with its own test</td></tr>
     <tr class="r-ok"><td><b>4. Execute</b></td><td>Only passed queries touch the database, on a read-only connection</td><td>Even if a rule were bypassed, the database physically cannot be changed</td></tr>
     <tr class="r-ok"><td><b>5. The log</b></td><td>Every decision is written down before the user sees anything</td><td>The audit page lets anyone verify what ran and why</td></tr>
   </table>
 
-  <h2>2 · The nine rules, in plain language</h2>
+  <h2>2 · The rules, in plain language</h2>
   <table>
     <tr><th>Rule</th><th>What it stops</th></tr>
     <tr class="r-ok"><td><b>No destructive statements</b></td><td>Queries that change or delete data. The database is read-only, full stop</td></tr>

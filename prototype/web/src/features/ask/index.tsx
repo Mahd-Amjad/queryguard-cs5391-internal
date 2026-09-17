@@ -141,7 +141,7 @@ export function AskView() {
             <p className='mb-1'><strong>2.</strong> An AI drafts the database query that answers it.</p>
             <p className='mb-0'>
               <strong>3.</strong> The safety gate checks that query before anything runs.{' '}
-              <a href='/how' className='text-primary underline'>The nine rules it applies</a>
+              <a href='/how' className='text-primary underline'>The rules it applies</a>
             </p>
           </CardContent>
         </Card>

@@ -24,7 +24,7 @@ push_internal() {
     echo "internal: nothing new"
   else
     git -C "$PROJECT" add -A
-    git -C "$PROJECT" commit -q -m "internal snapshot $(date +%Y-%m-%d %H:%M)"
+    git -C "$PROJECT" commit -q -m "internal snapshot $(date '+%Y-%m-%d %H:%M')"
   fi
   if ! git -C "$PROJECT" remote | grep -q "^origin"; then
     git -C "$PROJECT" remote add origin "$REMOTE_INTERNAL"
@@ -83,7 +83,7 @@ push_shared() {
   if git -C "$STAGE_SHARED" diff --cached --quiet; then
     echo "shared: already up to date"
   else
-    git -C "$STAGE_SHARED" commit -q -m "sync: publish whitelisted state from internal ($(date +%Y-%m-%d))"
+    git -C "$STAGE_SHARED" commit -q -m "sync: publish whitelisted state from internal ($(date '+%Y-%m-%d'))"
     git -C "$STAGE_SHARED" push origin main
     echo "shared: pushed whitelisted state to queryguard-cs5391"
   fi

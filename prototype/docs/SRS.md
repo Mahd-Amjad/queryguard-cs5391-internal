@@ -12,7 +12,7 @@
 This SRS specifies QueryGuard, a safety gate for LLM-generated SQL, as the review artifact for Group Project 1 and the requirement source for Group Project 2 (implementation and demo).
 
 ### 1.2 Scope
-In scope: plain-English question intake; candidate SQL generation (mock default, live LLM optional); a deterministic validation gate (9 rules, actions BLOCK / MASK / SUGGEST) operating on a parsed SQL AST; compound-statement verification per arm; sensitive-column side-channel blocking; a gate-only executor over a read-only connection; an append-only audit log; an evaluation harness (labeled corpus + metamorphic relations); a plain-language web UI.
+In scope: plain-English question intake; candidate SQL generation (mock default, live LLM optional); a deterministic validation gate (8 enforced rules + a parse-fail safe default; stretch rule G-10 pending; actions BLOCK / MASK / SUGGEST) operating on a parsed SQL AST; compound-statement verification per arm; sensitive-column side-channel blocking; a gate-only executor over a read-only connection; an append-only audit log; an evaluation harness (labeled corpus + metamorphic relations); a plain-language web UI.
 Out of scope (kept out so Project 2 stays feasible): live-LLM prompt-engineering quality work, user account management, multi-database support beyond SQLite, deployment beyond a single demo machine, model-side defenses.
 
 ### 1.3 Definitions
@@ -98,7 +98,7 @@ Two-person group (Mahd + Arwa) with named lanes; midterm date TBA (requirement d
 ### 3.4 User interface
 - **FR-U1 (Ask view):** the user submits a question and sees the answer, the generated SQL, the verdict, and the rule's plain-language name and explanation.
 - **FR-U2 (Metrics view):** pass/blocked/masked counts, per-rule attack-stop chart, and latency percentiles, each labeled so a first-time viewer knows what is good or bad.
-- **FR-U3 (Explain view):** a "How it works" page states the three-step flow and all nine rules in plain language, so no internal id is required to understand a verdict (plain names owned by `queryguard/explain.py`).
+- **FR-U3 (Explain view):** a "How it works" page states the three-step flow and the rule set in plain language, so no internal id is required to understand a verdict (plain names owned by `queryguard/explain.py`).
 
 ### 3.5 Non-functional requirements
 | ID | Requirement | Target |

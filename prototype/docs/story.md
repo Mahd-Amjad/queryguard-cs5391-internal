@@ -10,7 +10,7 @@ Nobody in that pipeline checks the AI's work.
 ## The idea
 
 Put a deterministic safety gate between the AI and the database. The gate is not another
-AI judging another AI; it is a fixed set of nine rules applied to the parsed query:
+AI judging another AI; it is a fixed set of safety rules applied to the parsed query:
 
 - destructive statements never run (the database is read-only at the connection level)
 - one query per question, no stacked commands

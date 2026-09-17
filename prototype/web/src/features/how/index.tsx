@@ -44,14 +44,14 @@ export function HowView() {
           </div>
           <div className='rounded-xl border p-3'>
             <div className='mb-1 font-semibold'>3. The gate checks</div>
-            Nine deterministic rules judge the query on its parsed structure - before anything runs.
+            Deterministic rules judge the query on its parsed structure - before anything runs.
           </div>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>The nine rules</CardTitle>
+          <CardTitle>The rules</CardTitle>
           <CardDescription>
             Every candidate query passes through all of them. Internal ids are shown once, then
             never needed again.

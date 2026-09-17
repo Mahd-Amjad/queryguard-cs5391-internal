@@ -49,7 +49,7 @@ Six attack classes, reused verbatim from the research project's published-corpus
 | G-06 | Schema recon | queries against `information_schema`/`sqlite_master` etc. | BLOCK |
 | G-07 | Execution escape | PRAGMA / `ATTACH` / function calls with side effects | BLOCK |
 | G-09 | Resource guard | LIMIT missing on unbounded SELECT | SUGGEST (block + corrected query) |
-| G-10 | Semantic mismatch | declared intent vs SQL shape disagree (LLM says "count", SQL deletes) | BLOCK |
+| G-10 | Semantic mismatch | declared intent vs SQL shape disagree (LLM says "count", SQL deletes) | BLOCK (stretch, pending) |
 
 Every rule = one numbered SRS requirement = one test case. G-05 (MASK) and G-09 (SUGGEST) demonstrate the non-blocking actions, which most prior work does not implement — a differentiator for the demo.
 
@@ -187,7 +187,7 @@ Accepted from recorded evidence; the operator independently reached the same con
   generated SQL, latency vs the 50 ms target, answer table; loading state on submit.
 - **FR-F2 Metrics view:** stat tiles, decision timeline chart, blocks-by-rule chart.
 - **FR-F3 Audit view:** paginated table over `GET /api/audit`.
-- **FR-F4 How view:** the three-step story + nine rules in plain language.
+- **FR-F4 How view:** the three-step story + the rule set in plain language.
 - **FR-F5 Data:** everything via the Flask API, same origin; the frontend never touches SQLite
   or the filesystem.
 - **FR-F6 Theme:** follows the system by default; light + dark both fully styled; toggle.

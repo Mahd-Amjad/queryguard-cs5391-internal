@@ -3,25 +3,26 @@
 **Rule:** this file is the map, not the territory. One line per thing: what it is, when to use
 it. If a line and reality disagree, fix the line the same day (owner: whichever session finds it).
 
-**Last updated:** 2026-09-15 (SM62). Maintainer: every session that changes the project.
+**Last updated:** 2026-09-16 (SE meta-cleanup: map completed, decks mapped, state/counts moved to README). Maintainer: every session that changes the project.
 
 ## The 30-second orientation
 
 - **What this is:** QueryGuard - a safety gate for LLM-generated SQL. CS5391 Group Project 1
-  (Mahd Amjad + Arwa Arafeh). Backend: Flask + SQLite + sqlglot (9 rules, BLOCK/MASK/SUGGEST,
-  audit log, 64-entry corpus, metamorphic relations). Frontend: React 19 + TypeScript + Vite +
-  shadcn/ui + Tailwind v4 + recharts SPA served by Flask.
+  (Mahd Amjad + Arwa Arafeh). Backend: Flask + SQLite + sqlglot (8 enforced rules + a parse-fail
+  safe default; stretch rule G-10 pending; BLOCK/MASK/SUGGEST verdicts, append-only audit,
+  64-entry corpus, metamorphic relations). Frontend: React 19 + TypeScript + Vite + shadcn/ui +
+  Tailwind v4 + recharts SPA served by Flask.
 - **Run the demo:** `web/` built -> `web/dist` served by Flask at :5055. Dev: `cd web && pnpm
   dev` (proxies /api to Flask). Backend only: `qg.sh serve`.
-- **Tests:** backend `pytest -q` (40, in `tests/`), frontend `cd web && pnpm test` (16, vitest
-  jsdom). Both must pass before any commit.
+- **Tests:** backend `pytest -q`, frontend `cd web && pnpm test`. Both green before any commit;
+  current counts live in README State.
 - **The product's depth = the evaluation** (corpus + metrics), not the UI. UI = delivery vehicle.
 
 ## Canonical files (project root = repo root)
 
 | File | Role |
 |---|---|
-| `README.md` | current state + run instructions (repo-facing) |
+| `README.md` | current state: numbers, status, module ownership (the map lives here, in INDEX) |
 | `TECH_PLAN.md` | design SSOT: architecture, rules, section 16 = frontend rebuild design |
 | `srs/SRS.md` (+ .html/.docx generated) | the requirement document (GP1 deliverable; md = source, run `scripts/md_to_html.py` after edits; docx via officecli) |
 | `DECISIONS.md` | decision log D-001.. - append-only, never rewrite old entries |
@@ -30,6 +31,11 @@ it. If a line and reality disagree, fix the line the same day (owner: whichever 
 | `submission/SUBMISSION_CHECKLIST.md` | GP1 submission tracker (11 items) |
 | `docs/ui-ux-reference-study.md` | design-language study (zapply/softwarejobs) - references, not templates |
 | `prototype/docs/story.md` | repo-facing narrative (renderer mirror of srs/ lives beside it) |
+| `proposal/` | GP1 proposal deck (presented Sep 9) + rebuild record + theme script |
+| `prototype/presentation/` | SRS presentation deck `QueryGuard_SRS.pptx` + `build_deck.py` (submission checklist item 1) |
+| `prototype/README.md` | the app's README: run/test instructions; the shared repo's entry point |
+| `group/` | Arwa review copies + answered messages |
+| `communications/` | routed Slack exports (the live chain file is Graduate-root `Slack_chat.txt`) |
 | `archive/` | consumed planning, jinja-ui-2026-09-15, planning originals |
 
 ## Canonical tools (how we do things)
@@ -37,7 +43,7 @@ it. If a line and reality disagree, fix the line the same day (owner: whichever 
 | Tool | Use for | Command |
 |---|---|---|
 | officecli | docx/xlsx/pptx create + edit (canonical office pipeline; markdown element = md -> docx) | `officecli help docx` |
-| `scripts/md_to_html.py` (in prototype/) | SRS md -> branded html + repo mirror | run from prototype after any SRS edit |
+| `scripts/md_to_html.py` (in prototype/) | SRS md -> branded html + repo mirror (the mirror is required: the shared repo ships `docs/` to readers with no workspace access) | run from prototype after any SRS edit |
 | presenton | deck GENERATION if needed (decks usually hand-built via python-pptx scripts) | see docs/DECK docs |
 | `.meta/scripts/research.py` (workspace) | gh/web research pass (tool-mandatory RESEARCH step) | `research.py gh "<query>"` |
 | `.meta/scripts/audit_scan.py` (workspace) | duplicate/corrupt/register audit | part of grad-doctor |

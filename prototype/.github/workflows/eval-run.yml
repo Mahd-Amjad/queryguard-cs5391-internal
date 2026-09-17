@@ -2,13 +2,6 @@ name: Evaluation run
 
 on:
   workflow_dispatch:
-    inputs:
-      mode:
-        description: 'Generator mode'
-        required: true
-        default: 'mock'
-        type: choice
-        options: [mock, live]
 
 jobs:
   evaluate:
@@ -24,10 +17,11 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run full corpus evaluation
-        run: python scripts/run_eval.py --corpus data/corpus.jsonl --mode ${{ inputs.mode }} --report out/report.md
+        # mock only until live mode exists (Project 2); run_eval.py rejects other modes
+        run: python scripts/run_eval.py --corpus data/corpus.jsonl --mode mock --report out/report.md
 
       - name: Upload report artifact
         uses: actions/upload-artifact@v4
         with:
-          name: eval-report-${{ inputs.mode }}
+          name: eval-report
           path: out/report.md
